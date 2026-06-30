@@ -5,23 +5,38 @@ const classSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true
-    }, // example: 9A, 10B
+      unique: true,
+      trim: true,
+    },
 
     grade: {
-      type: String,
-      required: true
+      type: Number,
+      required: true,
     },
 
     section: {
       type: String,
-      required: true
+      required: true,
+      trim: true,
     },
 
-    capacity: {
-      type: Number,
-      default: 40
-    }
+    academicYear: {
+      type: String,
+      default: "2026",
+    },
+
+    classTeacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Teacher",
+      default: null,
+    },
+
+    students: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -10,6 +10,7 @@ import SubjectList from "./pages/subjects/SubjectList";
 import AddTeacher from "./pages/teachers/AddTeacher";
 import Login from "./pages/auth/Login";
 import PublicRoute from "./components/PublicRoute";
+import ProtectedLayout from "./components/ProtectedLayout";
 function App() {
   return (
     <Routes>
@@ -38,12 +39,16 @@ function App() {
           </ProtectedRoute>
         }
       >
-        <Route path="/students" element={<StudentList />} />
+<Route element={<ProtectedLayout allowedRoles={["admin"]} />}>
+  <Route path="/students" element={<StudentList />} />
+  <Route path="/teachers" element={<TeacherList />} />
+  <Route path="/classes" element={<ClassList />} />
+  <Route path="/subjects" element={<SubjectList />} />
         <Route path="/students/add" element={<AddStudent />} />
         <Route path="/teachers/add" element={<AddTeacher />} />
-        <Route path="/teachers" element={<TeacherList />} />
-        <Route path="/classes" element={<ClassList />} />
-        <Route path="/subjects" element={<SubjectList />} />
+</Route>
+
+     
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
     </Routes>

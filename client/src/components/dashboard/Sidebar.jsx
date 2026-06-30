@@ -6,7 +6,8 @@ import {
   FaChalkboardTeacher,
   FaSchool,
   FaCog,
-  FaSignOutAlt
+  FaSignOutAlt,
+FaUserCircle
 } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -19,6 +20,8 @@ logout();
 navigate("/login")
 
 }
+const linkClass =
+  "flex items-center gap-2 p-2 hover:bg-blue-700 rounded";
   return (
     <aside
       className={`bg-blue-900 text-white min-h-screen rounded-b-2xl transition-all ${
@@ -30,97 +33,83 @@ navigate("/login")
           <h2 className="text-xl font-bold mb-6">SMS {user?.role?.charAt(0).toUpperCase()+user?.role?.slice(1)}</h2>
 
           <nav className="flex flex-col gap-2">
-{user?.role === "admin" && (
-  <>
-
-            {/* Dashboard */}
-            <NavLink to="/dashboard" className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded">
+    {/* Dashboard */}
+            <NavLink to="/dashboard" className={linkClass}>
               <FaHome /> Dashbord
             </NavLink>
 
+{user?.role === "admin" && (
+  <>
+
+        
             {/* Students */}
-            <NavLink to="/students" className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded">
+            <NavLink to="/students"className={linkClass}>
               <FaUserGraduate /> Students
             </NavLink>
 
             {/* Teachers */}
-            <NavLink to="/teachers" className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded">
+            <NavLink to="/teachers" className={linkClass}>
               <FaChalkboardTeacher /> Teachers
             </NavLink>
 
             {/* Classes */}
-            <NavLink to="/classes" className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded">
+            <NavLink to="/classes" className={linkClass}>
               <FaSchool /> Classes
             </NavLink>
 
             {/* Subjects */}
-            <NavLink to="/subjects" className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded">
+            <NavLink to="/subjects" className={linkClass}>
               📘 Subjects
             </NavLink>
 
-            {/* Settings */}
-            <NavLink to="/settings" className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded">
-              <FaCog /> Settings
-            </NavLink>
- <NavLink to="/profile" className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded">
-              <FaCog /> Profile
-            </NavLink>
+          
+ 
          
   </>
 )}{user?.role === "teacher" && (
   <>
-    <NavLink
-      to="/dashboard"
-      className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded"
-    >
-      <FaHome /> Dashboard
-    </NavLink>
+    
 
     <NavLink
       to="/my-classes"
-      className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded"
+  className={linkClass}
     >
       <FaSchool /> My Classes
     </NavLink>
 
     <NavLink
       to="/students"
-      className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded"
+     className={linkClass}
     >
       <FaUserGraduate /> My Students
     </NavLink>
 
-    <NavLink
-      to="/profile"
-      className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded"
-    >
-      <FaCog /> Profile
-    </NavLink>
+    
   </>
 )}{user?.role === "student" && (
   <>
-    <NavLink
-      to="/dashboard"
-      className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded"
-    >
-      <FaHome /> Dashboard
-    </NavLink>
+   
 
-    <NavLink
-      to="/profile"
-      className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded"
-    >
-      <FaCog /> My Profile
-    </NavLink>
+ 
 
     <NavLink
       to="/subjects"
-      className="flex items-center gap-2 p-2 hover:bg-blue-700 rounded"
+ className={linkClass}
     >
       📘 My Subjects
     </NavLink>
   </>
 )}
+   <NavLink
+      to="/profile"
+    className={linkClass}
+    >
+      <FaUserCircle /> My Profile
+    </NavLink>
+  {/* Settings */}
+            <NavLink to="/settings" className={linkClass}>
+              <FaCog /> Settings
+            </NavLink>
    {/* Logout */}
             <button className="flex items-center gap-2 p-2 mt-6 bg-red-600 hover:bg-red-700 rounded" onClick={handleLogout}>
               <FaSignOutAlt /> Logout

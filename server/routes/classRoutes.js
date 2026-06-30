@@ -3,12 +3,23 @@ const router = express.Router();
 
 const {
   createClass,
-  getClasses,
-  deleteClass
+  getAllClasses,
+getClassById,
+updateClass,
+  deleteClass,
+assignStudentToClass,
+assignTeacherToClass,
+getClassWithDetails,
+getTeacherClasses,
 } = require("../controllers/classController");
 
-router.post("/add", createClass);
-router.get("/", getClasses);
+router.post("/", createClass);
+router.post("/assign-student", assignStudentToClass);
+router.post("/assign-teacher", assignTeacherToClass)
+router.get("/", getAllClasses);
+router.get("/:id", getClassById);
+router.put("/:id", updateClass);
 router.delete("/:id", deleteClass);
-
+router.get("/details/:id", getClassWithDetails);
+console.log("getTeacherClasses:", getTeacherClasses);
 module.exports = router;
