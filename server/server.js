@@ -5,6 +5,7 @@ const dotenv=require('dotenv')
 dotenv.config();
 
 const connectDB=require("./config/connection")
+const  dashboardRoute=require('./routes/dashboardRoute')
 const studentRoutes=require("./routes/studentRoutes")
 const teacherRoutes=require("./routes/teacherRoutes")
 const classRoutes=require("./routes/classRoutes")
@@ -15,6 +16,7 @@ connectDB();
 app.use(cors())
 app.use(express.json())
 
+app.use("/api/dashboard", dashboardRoute)
 app.use("/api/students", studentRoutes)
 app.use("/api/teachers", teacherRoutes)
 app.use("/api/auth", authRoutes);

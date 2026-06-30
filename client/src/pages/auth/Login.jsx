@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { Eye, EyeOff } from "lucide-react";
-
+import { AuthContext } from "../../context/AuthContext";
 function Login() {
   const navigate = useNavigate();
-
+const { login } = useContext(AuthContext);
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -59,19 +59,10 @@ function Login() {
       );
 
      
-localStorage.setItem("user", JSON.stringify(res.data.user));
+login(res.data.user);
+  localStorage.setItem("token", res.data.token);
 
-      if (res.data.role === "admin")
-        navigate("/dashboard");
-
-      if (res.data.role === "teacher")
-        navigate("/teacher-dashboard");
-
-      if (res.data.role === "student")
-        navigate("/student-dashboard");
-   localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
-
+navigate("/dashboard");
     } catch (err) {
       setServerError(
         err.response?.data?.message ||
@@ -83,7 +74,7 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
   };
 
   return (
-    <div className="h-full bg-gradient-to-r from-indigo-100 to-indigo-300 flex justify-center items-center p-4">
+    <div className="min-h-screen bg-gradient-to-r from-black/35 to-indigo-100 flex justify-center items-center p-4">
 
       <div className=" space-y-5 bg-gradient-to-b from-white to-indigo-100 shadow-lg border rounded-2xl w-full max-w-md p-8 ">
 

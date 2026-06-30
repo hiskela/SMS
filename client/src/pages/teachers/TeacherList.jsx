@@ -6,19 +6,21 @@ function TeacherList() {
   const [teachers, setTeachers] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-const [search, setSearch]=useState("")
+  const [search, setSearch] = useState("");
+
   // Load teachers
   const fetchTeachers = async () => {
     try {
-setLoading(true)
+      setLoading(true);
       const res = await axios.get("http://localhost:3000/api/teachers");
-setLoading(false);
+      setLoading(false);
       setTeachers(res.data);
     } catch (err) {
       console.log(err);
-setLoading(false)
+      setLoading(false);
     }
   };
+
   const filteredTeachers = teachers.filter((t) =>
     `${t.firstName} ${t.lastName} ${t.admissionNumber}`
       .toLowerCase()
@@ -40,77 +42,127 @@ setLoading(false)
   };
 
   return (
-    <div className="p-6">
-
+    <div className="p-4 md:p-6">
       {/* HEADER SECTION */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
         <h1 className="text-2xl font-bold">Teachers</h1>
 
         <button
           onClick={() => navigate("/teachers/add")}
-          className="bg-green-600 text-white px-4 py-2 rounded"
+          className="bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto hover:bg-green-700 transition-colors"
         >
           + Add Teacher
         </button>
       </div>
-   <input
+
+      {/* SEARCH */}
+      <input
         type="text"
-        placeholder="Search student..."
-        className="border p-2 w-full mb-4 rounded"
+        placeholder="Search teacher by name or ID..."
+        className="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      {/* TABLE */}
-{loading?        <p>Loading Teachers...</p>:  
-      <div className="bg-white shadow rounded ">
-        <table className="w-full min-w-[600px]  md:p-6">
-          <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="p-3">#</th>
 
-              <th className="p-3">Teacher ID</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Gender</th>
-              <th className="p-3">Phone</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
+      {/* LOADING STATE */}
+      {loading ? (
+        <p className="text-center text-gray-500 py-8">Loading Teachers...</p>
+      ) : (
+        <>
+          {/* DESKTOP TABLE VIEW - Hidden on mobile */}
+          <div className="hidden md:block bg-white shadow rounded overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-200 text-left">
+                  <th className="p-3">#</th>
+                  <th className="p-3">Teacher ID</th>
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Gender</th>
+                  <th className="p-3">Phone</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTeachers.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="p-4 text-center text-gray-500">
+                      No teachers found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredTeachers.map((t, i) => (
+                    <tr key={t._id} className="border-t hover:bg-gray-50">
+                      <td className="p-3">{i + 1}</td>
+                      <td className="p-3">{t.teacherId}</td>
+                      <td className="p-3">
+                        {t.firstName} {t.lastName}
+                      </td>
+                      <td className="p-3">{t.gender}</td>
+                      <td className="p-3">{t.phone}</td>
+                      <td className="p-3">
+                        <button
+                          onClick={() => deleteTeacher(t._id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded cursor-pointer hover:bg-red-600 transition-colors"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
 
-          <tbody>
-            {teachers.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="p-4 text-center text-gray-500">
-                  No teachers found
-                </td>
-              </tr>
+          {/* MOBILE CARD VIEW - Visible only on mobile */}
+          <div className="md:hidden space-y-4">
+            {filteredTeachers.length === 0 ? (
+              <p className="text-center text-gray-500 py-8">No teachers found</p>
             ) : (
               filteredTeachers.map((t, i) => (
-                <tr key={t} className="border-t">
-
-                  <td className="p-3">{i+1}</td>
-
-                  <td className="p-3">{t.teacherId}</td>
-                  <td className="p-3">
-                    {t.firstName} {t.lastName}
-                  </td>
-                  <td className="p-3">{t.gender}</td>
-                  <td className="p-3">{t.phone}</td>
-
-                  <td className="p-3 flex gap-2">
+                <div
+                  key={t._id}
+                  className="bg-white shadow rounded-lg p-4 border border-gray-200"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-sm text-gray-500">#{i + 1}</span>
                     <button
                       onClick={() => deleteTeacher(t._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded cursor-pointer"
+                      className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
                     >
                       Delete
                     </button>
-                  </td>
-                </tr>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center border-b pb-2">
+                      <span className="font-medium text-gray-600">Teacher ID</span>
+                      <span className="text-gray-900">{t.teacherId}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b pb-2">
+                      <span className="font-medium text-gray-600">Name</span>
+                      <span className="text-gray-900">
+                        {t.firstName} {t.lastName}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b pb-2">
+                      <span className="font-medium text-gray-600">Gender</span>
+                      <span className="text-gray-900">{t.gender}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-600">Phone</span>
+                      <span className="text-gray-900">{t.phone}</span>
+                    </div>
+                  </div>
+                </div>
               ))
             )}
-          </tbody>
-        </table>
-      </div>
-}
+          </div>
+        </>
+      )}
     </div>
   );
 }

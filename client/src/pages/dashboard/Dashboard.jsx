@@ -1,45 +1,32 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+
+import AdminDashboard from "./AdminDashboard";
+import TeacherDashboard from "./TeacherDashboard";
+import StudentDashboard from "./StudentDashboard";
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
+  const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    // later we will replace this with JWT token decoding
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser);
-  }, []);
-
+  // IMPORTANT: wait until user loads
   if (!user) {
-    return <p className="p-6">Loading dashboard...</p>;
+    return <h2>Loading...</h2>;
   }
 
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">
-        Welcome, {user.username} 👋
-      </h1>
 
-      <div className="mt-6 grid grid-cols-3 gap-4">
+  switch (user.role) {
+    case "admin":
+      return <AdminDashboard />;
 
-        <div className="bg-blue-100 p-4 rounded">
-          <h2 className="font-bold">Students</h2>
-          <p>Manage student records</p>
-        </div>
+    case "teacher":
+      return <TeacherDashboard />;
 
-        <div className="bg-green-100 p-4 rounded">
-          <h2 className="font-bold">Teachers</h2>
-          <p>Manage teacher records</p>
-        </div>
+    case "student":
+      return <StudentDashboard />;
 
-        <div className="bg-purple-100 p-4 rounded">
-          <h2 className="font-bold">Reports</h2>
-          <p>System overview</p>
-        </div>
-
-      </div>
-    </div>
-  );
+    default:
+      return <h2>Invalid Role</h2>;
+  }
 }
 
 export default Dashboard;

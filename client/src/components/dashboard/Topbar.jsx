@@ -8,7 +8,7 @@ function Topbar({ isOpen, setIsOpen }) {
         ☰
       </button>
 
-      <h1 className="ml-4 font-semibold">School Management System</h1>
+      <h1 className="ml-4 font-semibold">School Managent System</h1>
     </div>
   );
 }
