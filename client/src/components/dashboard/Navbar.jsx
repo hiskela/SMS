@@ -7,7 +7,7 @@ const {user}=useContext(AuthContext)
     <div className="bg-white shadow h-16 flex justify-between items-center px-6">
   <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-3 py-1 bg-blue-600 text-white rounded "
+        className="  text-black text-xl font-extrabold  rounded cursor-pointer"
       >
         ☰
       </button>

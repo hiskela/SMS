@@ -2,38 +2,31 @@ const mongoose = require("mongoose");
 
 const subjectSchema = new mongoose.Schema(
   {
-    subjectId: {
-      type: String,
-      unique: true
-    },
-
     name: {
       type: String,
-      required: true
+      required: true,
+      trim: true,
+      unique: true,
     },
 
     code: {
       type: String,
-      required: true // e.g. MATH, ENG
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
     },
 
-    grade: {
+    description: {
       type: String,
-      required: true // Grade 9–12
+      default: "",
     },
 
-    teacher: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Teacher",
-      default: null
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
     },
-
-    classes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Class"
-      }
-    ]
   },
   { timestamps: true }
 );

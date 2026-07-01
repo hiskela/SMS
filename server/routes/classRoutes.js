@@ -21,5 +21,4 @@ router.get("/:id", getClassById);
 router.put("/:id", updateClass);
 router.delete("/:id", deleteClass);
 router.get("/details/:id", getClassWithDetails);
-console.log("getTeacherClasses:", getTeacherClasses);
 module.exports = router;

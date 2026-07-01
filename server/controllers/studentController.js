@@ -86,3 +86,28 @@ exports.deleteStudent = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.getMyProfile = async (req, res) => {
+  try {
+    const student = await Student.findOne({
+      user: req.user.id,
+    }).populate({
+      path: "assignedClass",
+      populate: {
+        path: "classTeacher",
+      },
+    });
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found",
+      });
+    }
+
+    res.json(student);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};

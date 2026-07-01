@@ -18,7 +18,24 @@ const generateSubjectId = async () => {
 };
 
 // CREATE SUBJECT
+
 exports.createSubject = async (req, res) => {
+const { name, code, description } = req.body;
+
+if (!name || !code) {
+    return res.status(400).json({
+        message: "Name and code are required."
+    });
+}
+const existing = await Subject.findOne({
+    code
+});
+
+if (existing) {
+    return res.status(400).json({
+        message: "Subject code already exists."
+    });
+}
   try {
     const subjectId = await generateSubjectId();
 
@@ -26,6 +43,7 @@ exports.createSubject = async (req, res) => {
       ...req.body,
       subjectId
     });
+
 
     const saved = await subject.save();
 
@@ -43,22 +61,65 @@ exports.createSubject = async (req, res) => {
 exports.getSubjects = async (req, res) => {
   try {
     const subjects = await Subject.find()
-      .populate("teacher")
-      .populate("classes");
+ 
 
     res.json(subjects);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+exports.getSubjectById = async (req, res) => {
+  try {
+    const subject = await Subject.findById(req.params.id);
 
+    if (!subject) {
+      return res.status(404).json({
+        message: "Subject not found",
+      });
+    }
+
+    res.json(subject);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 // DELETE SUBJECT
 exports.deleteSubject = async (req, res) => {
   try {
-    await Subject.findByIdAndDelete(req.params.id);
-
+   const subject= await Subject.findByIdAndDelete(req.params.id);
+if (!subject) {
+  return res.status(404).json({
+    message: "Subject not found",
+  });
+}
     res.json({ message: "Subject deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+exports.updateSubject = async (req, res) => {
+  try {
+    const subject = await Subject.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!subject) {
+      return res.status(404).json({
+        message: "Subject not found",
+      });
+    }
+
+    res.json({
+      message: "Subject updated successfully",
+      subject,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };

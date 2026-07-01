@@ -11,6 +11,8 @@ import AddTeacher from "./pages/teachers/AddTeacher";
 import Login from "./pages/auth/Login";
 import PublicRoute from "./components/PublicRoute";
 import ProtectedLayout from "./components/ProtectedLayout";
+import AddClass from "./pages/classes/AddClass";
+
 function App() {
   return (
     <Routes>
@@ -44,6 +46,7 @@ function App() {
   <Route path="/teachers" element={<TeacherList />} />
   <Route path="/classes" element={<ClassList />} />
   <Route path="/subjects" element={<SubjectList />} />
+<Route path="/classes/add" element={<AddClass/>}/>
         <Route path="/students/add" element={<AddStudent />} />
         <Route path="/teachers/add" element={<AddTeacher />} />
 </Route>

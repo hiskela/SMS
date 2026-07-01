@@ -20,8 +20,10 @@ logout();
 navigate("/login")
 
 }
-const linkClass =
-  "flex items-center gap-2 p-2 hover:bg-blue-700 rounded";
+const linkClass = ({ isActive }) =>
+  `flex items-center gap-2 p-2 rounded transition ${
+    isActive ? "bg-blue-700 text-white" : "hover:bg-blue-600"
+  }`;
   return (
     <aside
       className={`bg-blue-900 text-white min-h-screen rounded-b-2xl transition-all ${

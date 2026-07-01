@@ -25,7 +25,7 @@ const classSchema = new mongoose.Schema(
       default: "2026",
     },
 
-    classTeacher: {
+    homeroomTeacher: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Teacher",
       default: null,
