@@ -2,11 +2,31 @@ const Class = require("../models/Class");
 const Student = require("../models/Student");
 const Teacher = require("../models/Teacher");
 
+const generateClassId = async () => {
+  const year = new Date().getFullYear();
+
+  const lastClass = await Class.findOne({})
+    .sort({ createdAt: -1 })
+    .select("classId");
+
+  let number = 1;
+
+  if (lastClass && lastClass.classId) {
+    number = parseInt(lastClass.classId.slice(-4)) + 1;
+  }
+
+  return `CLS${year}${String(number).padStart(4, "0")}`;
+};
 // CREATE
 const createClass = async (req, res) => {
   try {
-    const newClass = await Class.create(req.body);
-    res.status(201).json(newClass);
+const classId = await generateClassId();
+
+const newClass = await Class.create({
+  ...req.body,
+  classId,
+});  
+  res.status(201).json(newClass);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
