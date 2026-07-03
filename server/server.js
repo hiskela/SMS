@@ -12,7 +12,7 @@ const classRoutes=require("./routes/classRoutes")
 const subjectRoutes=require("./routes/subjectRoutes")
 const authRoutes=require("./routes/authRoutes")
 const teachingAssignmentRoutes = require("./routes/teachingAssignmentRoutes");
-
+const profileRoutes=require("./routes/profileRoutes")
 
 connectDB();
 app.use(cors())
@@ -26,8 +26,7 @@ app.use("/api/classes", classRoutes)
 app.use("/api/subjects", subjectRoutes)
 app.use("/api/classes", classRoutes)
 app.use("/api/assignments", teachingAssignmentRoutes);
-
-
+app.use("/api/profile", profileRoutes);
 const PORT=process.env.PORT||3000;
 app.listen(PORT, ()=>{
 console.log(`runnnig on port ${PORT}`);

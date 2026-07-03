@@ -20,39 +20,36 @@ const generateSubjectId = async () => {
 // CREATE SUBJECT
 
 exports.createSubject = async (req, res) => {
-const { name, code, description } = req.body;
-
+  try {
+const {name, code}=req.body;
+const existing = await Subject.findOne({ name });
 if (!name || !code) {
-    return res.status(400).json({
-        message: "Name and code are required."
-    });
-}
-const existing = await Subject.findOne({
-    code
-});
+      return res.status(400).json({
+        message: "Name and code are required.",
+      });
+    }
 
 if (existing) {
-    return res.status(400).json({
-        message: "Subject code already exists."
-    });
+  return res.status(400).json({
+    message: "Subject code already exists."
+  });
 }
-  try {
     const subjectId = await generateSubjectId();
 
     const subject = new Subject({
       ...req.body,
-      subjectId
+      subjectId,
     });
-
 
     const saved = await subject.save();
 
     res.status(201).json({
       message: "Subject created successfully",
-      subject: saved
+      subject: saved,
     });
 
   } catch (err) {
+    console.log("SUBJECT ERROR:", err);
     res.status(500).json({ message: err.message });
   }
 };

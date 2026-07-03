@@ -1,47 +1,79 @@
-import { useState } from "react";
-
-function ClassForm() {
+import { useEffect, useState } from "react";
+function ClassForm({
+  initialData = {},
+  onSubmit,
+  loading = false,
+}) {
   const [form, setForm] = useState({
     name: "",
     grade: "",
-    section: ""
+    section: "",
   });
+
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      setForm({
+        name: initialData.name || "",
+        grade: initialData.grade || "",
+        section: initialData.section || "",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  return (
-    <div className="p-4 space-y-3">
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+if(!form.name||!form.grade||!form.section) return;
+    onSubmit(form);
+  };
 
+  return (
+    <form
+      onSubmit={handleFormSubmit}
+      className="space-y-4 bg-white p-6 rounded shadow"
+    >
       <input
+        type="text"
         name="name"
+        placeholder="Class Name"
         value={form.name}
         onChange={handleChange}
-        placeholder="Class Name"
-        className="border p-2 w-full"
+        className="w-full border rounded p-2"
       />
 
       <input
+        type="text"
         name="grade"
+        placeholder="Grade"
         value={form.grade}
         onChange={handleChange}
-        placeholder="Grade"
-        className="border p-2 w-full"
+        className="w-full border rounded p-2"
       />
 
       <input
+        type="text"
         name="section"
+        placeholder="Section"
         value={form.section}
         onChange={handleChange}
-        placeholder="Section"
-        className="border p-2 w-full"
+        className="w-full border rounded p-2"
       />
 
-    </div>
+      {/* ✅ Save Button */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="bg-blue-600 hover:bg-blue-700 text-black px-5 py-2 rounded"
+      >
+        {loading ? "Saving..." : "Save Class"}
+      </button>
+    </form>
   );
 }
 

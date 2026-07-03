@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { getClasses, deleteClass, getClassById } from "../../../../server/services/classService";
 
 function ClassList() {
   const [classes, setClasses] = useState([]);
@@ -14,7 +14,7 @@ function ClassList() {
     try {
       setLoading(true);
 
-      const res = await axios.get("http://localhost:3000/api/classes");
+      const res = await getClasses()
 
       setClasses(res.data);
     } catch (err) {
@@ -34,7 +34,7 @@ function ClassList() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/classes/${id}`);
+      await deleteClass(id)
       fetchClasses(); // refresh list
     } catch (err) {
       alert("Failed to delete class");

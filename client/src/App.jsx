@@ -12,6 +12,11 @@ import Login from "./pages/auth/Login";
 import PublicRoute from "./components/PublicRoute";
 import ProtectedLayout from "./components/ProtectedLayout";
 import AddClass from "./pages/classes/AddClass";
+import AddSubject from "./pages/subjects/AddSubject";
+import EditSubject from "./pages/subjects/EditSubject";
+import EditClass from "./pages/classes/EditClass";
+import EditProfile from "./pages/profile/EditProfile";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   return (
@@ -46,13 +51,22 @@ function App() {
   <Route path="/teachers" element={<TeacherList />} />
   <Route path="/classes" element={<ClassList />} />
   <Route path="/subjects" element={<SubjectList />} />
+<Route path="/subjects/add" element={<AddSubject />} />
+<Route path="/subjects/edit/:id" element={<EditSubject />} />
 <Route path="/classes/add" element={<AddClass/>}/>
+<Route
+  path="/classes/edit/:id"
+  element={<EditClass />}
+/>
         <Route path="/students/add" element={<AddStudent />} />
         <Route path="/teachers/add" element={<AddTeacher />} />
 </Route>
 
      
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile/me" element={<EditProfile />} />
+        <Route path="/profile" element={<Profile />} />
+
       </Route>
     </Routes>
   );

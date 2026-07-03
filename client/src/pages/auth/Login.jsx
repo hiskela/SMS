@@ -82,7 +82,7 @@ navigate("/dashboard");
           School Management System
         </h1>
 
-        <p className="text-center text-gray-500 mt-2 mb-6">
+        <p className="text-center text-red-300 mt-2 mb-6">
           Login to continue
         </p>
 

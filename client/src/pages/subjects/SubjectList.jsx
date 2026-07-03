@@ -1,48 +1,67 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import {
+  getSubjects,
+  deleteSubject,
+} from "../../../../server/services/subjectService";
+import { useNavigate } from "react-router-dom";
 
 function SubjectList() {
   const [subjects, setSubjects] = useState([]);
+  const navigate = useNavigate();
+
+  const loadSubjects = async () => {
+    const res = await getSubjects();
+    setSubjects(res.data);
+  };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/subjects")
-      .then((res) => setSubjects(res.data))
-      .catch((err) => console.log(err));
+    loadSubjects();
   }, []);
 
-  const deleteSubject = async (id) => {
-    await axios.delete(`http://localhost:3000/api/subjects/${id}`);
-    setSubjects(subjects.filter((s) => s._id !== id));
+  const handleDelete = async (id) => {
+    await deleteSubject(id);
+    loadSubjects();
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Subjects</h1>
+    <div className="p-6">
+      <h2 className="text-xl font-bold mb-4">Subjects</h2>
 
-      <table className="w-full bg-white shadow">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="p-2">Subject ID</th>
-            <th className="p-2">Name</th>
-            <th className="p-2">Code</th>
-            <th className="p-2">Grade</th>
-            <th className="p-2">Actions</th>
+      <button
+        onClick={() => navigate("/subjects/add")}
+        className="bg-green-600 text-white px-3 py-1 mb-4"
+      >
+        Add Subject
+      </button>
+          <div className="hidden md:block bg-white shadow rounded overflow-x-auto">
+
+     
+  <table className="w-full border">
+        <thead className="bg-gray-300">
+          <tr>
+            <th className="p-2 border">Name</th>
+            <th className="p-2 border">Code</th>
+            <th className="p-2 border">Actions</th>
           </tr>
         </thead>
 
         <tbody>
           {subjects.map((s) => (
-            <tr key={s._id} className="text-center border-t">
-              <td className="p-2">{s.subjectId}</td>
-              <td className="p-2">{s.name}</td>
-              <td className="p-2">{s.code}</td>
-              <td className="p-2">{s.grade}</td>
+            <tr key={s._id}>
+              <td className="p-2 border">{s.name}</td>
+              <td className="p-2 border">{s.code}</td>
 
-              <td className="p-2">
+              <td className="p-2 border space-x-2 flex items-center justify-center">
                 <button
-                  onClick={() => deleteSubject(s._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
+                  onClick={() => navigate(`/subject/edit/${s._id}`)}
+                  className="bg-green-500 text-white px-3 py-1 rounded"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => handleDelete(s._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded"
                 >
                   Delete
                 </button>
@@ -51,6 +70,8 @@ function SubjectList() {
           ))}
         </tbody>
       </table>
+
+</div>
     </div>
   );
 }
