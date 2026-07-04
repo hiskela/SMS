@@ -15,7 +15,6 @@ import AddClass from "./pages/classes/AddClass";
 import AddSubject from "./pages/subjects/AddSubject";
 import EditSubject from "./pages/subjects/EditSubject";
 import EditClass from "./pages/classes/EditClass";
-import EditProfile from "./pages/profile/EditProfile";
 import Profile from "./pages/profile/Profile";
 
 function App() {
@@ -64,8 +63,8 @@ function App() {
 
      
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile/me" element={<EditProfile />} />
-        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/profile/me" element={<EditProfile />} /> */}
+        <Route path="/profile/me" element={<Profile />} />
 
       </Route>
     </Routes>

@@ -2,7 +2,6 @@ const User = require("../models/User");
 const Teacher = require("../models/Teacher");
 const Student = require("../models/Student");
 
-// GET MY PROFILE
 exports.getMyProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
@@ -15,7 +14,18 @@ exports.getMyProfile = async (req, res) => {
       });
     }
 
-    res.json(user);
+    let profileData = {
+      _id: user._id,
+      username: user.username,
+      role: user.role,
+      email: user.teacher?.email || user.student?.email,
+      firstName:
+        user.teacher?.firstName || user.student?.firstName,
+      lastName:
+        user.teacher?.lastName || user.student?.lastName,
+    };
+
+    res.json(profileData);
   } catch (err) {
     res.status(500).json({
       message: err.message,
@@ -68,3 +78,7 @@ exports.updateMyProfile = async (req, res) => {
     });
   }
 };
+const user = await User.findById(req.user.id)
+  .populate("teacher")
+  .populate("student");
+

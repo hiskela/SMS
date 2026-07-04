@@ -103,7 +103,7 @@ const linkClass = ({ isActive }) =>
   </>
 )}
    <NavLink
-      to="/profile"
+      to="/profile/me"
     className={linkClass}
     >
       <FaUserCircle /> My Profile
