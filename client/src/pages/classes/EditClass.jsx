@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ClassForm from "./ClassForm";
-import {
-  getClassById,
-  updateClass,
-} from "../../../../server/services/classService";
+import api from "../../api/axios";
 
 function EditClass() {
   const { id } = useParams();
@@ -13,13 +10,9 @@ function EditClass() {
   const [classData, setClassData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadClass();
-  }, []);
-
   const loadClass = async () => {
     try {
-      const res = await getClassById(id);
+      const res = await api.get(`/classes/${id}`);
       setClassData(res.data);
     } catch (err) {
       console.log(err);
@@ -28,9 +21,13 @@ function EditClass() {
     }
   };
 
+  useEffect(() => {
+    loadClass();
+  }, []);
+
   const handleSubmit = async (data) => {
     try {
-      await updateClass(id, data);
+      await api.put(`/classes/${id}`, data);
       navigate("/classes");
     } catch (err) {
       console.log(err);

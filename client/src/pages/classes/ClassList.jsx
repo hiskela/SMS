@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getClasses, deleteClass, getClassById } from "../../../../server/services/classService";
+import api from "../../api/axios";
 
 function ClassList() {
   const [classes, setClasses] = useState([]);
@@ -14,10 +14,10 @@ function ClassList() {
     try {
       setLoading(true);
 
-      const res = await getClasses()
+      const res = await api.get("/classes");
 
       setClasses(res.data);
-    } catch (err) {
+    } catch {
       setError("Failed to load classes");
     } finally {
       setLoading(false);
@@ -34,9 +34,9 @@ function ClassList() {
     if (!confirmDelete) return;
 
     try {
-      await deleteClass(id)
+      await api.delete(`/classes/${id}`);
       fetchClasses(); // refresh list
-    } catch (err) {
+    } catch {
       alert("Failed to delete class");
     }
   };

@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SubjectForm from "./SubjectForm";
-import {
-  getSubjectById,
-  updateSubject,
-} from "../../../../server/services/subjectService";
+import api from "../../api/axios";
 
 function EditSubject() {
   const { id } = useParams();
@@ -13,13 +10,9 @@ function EditSubject() {
   const [subjectData, setSubjectData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadSubject();
-  }, []);
-
   const loadSubject = async () => {
     try {
-      const res = await getSubjectById(id);
+      const res = await api.get(`/subjects/${id}`);
       setSubjectData(res.data);
     } catch (err) {
       console.log(err);
@@ -28,9 +21,13 @@ function EditSubject() {
     }
   };
 
+  useEffect(() => {
+    loadSubject();
+  }, []);
+
   const handleSubmit = async (data) => {
     try {
-      await updateSubject(id, data);
+      await api.put(`/subjects/${id}`, data);
       navigate("/subjects");
     } catch (err) {
       console.log(err);

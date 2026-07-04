@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getSubjects,
-  deleteSubject,
-} from "../../../../server/services/subjectService";
+import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 function SubjectList() {
@@ -10,7 +7,7 @@ function SubjectList() {
   const navigate = useNavigate();
 
   const loadSubjects = async () => {
-    const res = await getSubjects();
+    const res = await api.get("/subjects");
     setSubjects(res.data);
   };
 
@@ -19,7 +16,7 @@ function SubjectList() {
   }, []);
 
   const handleDelete = async (id) => {
-    await deleteSubject(id);
+    await api.delete(`/subjects/${id}`);
     loadSubjects();
   };
 

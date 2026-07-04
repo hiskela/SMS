@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function SubjectForm({ initialData = {}, onSubmit, loading }) {
+function SubjectForm({ initialData = {}, onSubmit }) {
   const [form, setForm] = useState({
     name: "",
     code: "",

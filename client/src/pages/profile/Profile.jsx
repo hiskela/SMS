@@ -1,25 +1,23 @@
 import { useEffect, useState } from "react";
-import api from "../../../../server/services/api";
+import api from "../../api/axios";
 
 function Profile() {
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
 
+  const loadProfile = async () => {
+    try {
+      const res = await api.get("/profile/me");
+      setProfile(res.data);
+    } catch (err) {
+      console.log("PROFILE ERROR:", err.response?.data || err.message);
+    }
+  };
+
   useEffect(() => {
     loadProfile();
   }, []);
-
-const loadProfile = async () => {
-  try {
-    const res = await api.get("/profile/me");
-
-
-    setProfile(res.data);
-  } catch (err) {
-    console.log("PROFILE ERROR:", err.response?.data || err.message);
-  }
-};
 
   const handleChange = (e) => {
     setForm({
@@ -50,8 +48,7 @@ if (profile.error) return <p className="text-2xl text-red-600 ">⚠️Failed to 
         </div>
 
         <h2 className="mt-4 text-sm font-bold">
-          {profile.teacher.firstName||profile.student.firstName}{profile.teacher.lastName||profile.student.lastName}
-        </h2>
+NAME        </h2>
 
         
         <div className="mt-4 text-sm text-gray-600 space-y-2">
@@ -113,7 +110,7 @@ if (profile.error) return <p className="text-2xl text-red-600 ">⚠️Failed to 
           <div className="space-y-3 text-gray-700">
 
             <p><strong>Username:</strong> {profile.username}</p>
-            <p><strong>Email:</strong> {profile.teacher.email}</p>
+            <p><strong>Email:</strong> EMAIL</p>
             <p><strong>Role:</strong> {profile.role}</p>
 
             {profile.student && (

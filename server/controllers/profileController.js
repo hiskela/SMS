@@ -78,7 +78,3 @@ exports.updateMyProfile = async (req, res) => {
     });
   }
 };
-const user = await User.findById(req.user.id)
-  .populate("teacher")
-  .populate("student");
-

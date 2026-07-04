@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 function TeacherList() {
@@ -11,12 +11,11 @@ function TeacherList() {
   // Load teachers
   const fetchTeachers = async () => {
     try {
-      setLoading(true);
-      const res = await axios.get("http://localhost:3000/api/teachers");
-      setLoading(false);
+      const res = await api.get("/teachers");
       setTeachers(res.data);
     } catch (err) {
       console.log(err);
+    } finally {
       setLoading(false);
     }
   };
@@ -34,7 +33,7 @@ function TeacherList() {
   // Delete teacher
   const deleteTeacher = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/teachers/${id}`);
+      await api.delete(`/teachers/${id}`);
       setTeachers(teachers.filter((t) => t._id !== id));
     } catch (err) {
       console.log(err);
