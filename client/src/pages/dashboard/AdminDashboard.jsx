@@ -33,12 +33,12 @@ axios.get("http://localhost:3000/api/dashboard/stats")
 
         <div className="bg-white rounded-xl shadow-md p-6">
           <h2 className="text-gray-500">Classes</h2>
-          <p className="text-4xl font-bold mt-2">0</p>
+          <p className="text-4xl font-bold mt-2">{stats.classes}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-6">
           <h2 className="text-gray-500">Subjects</h2>
-          <p className="text-4xl font-bold mt-2">0</p>
+          <p className="text-4xl font-bold mt-2">{stats.subjects}</p>
         </div>
 
       </div>
