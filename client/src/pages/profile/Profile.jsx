@@ -54,7 +54,6 @@ function Profile() {
   };
 
   if (!profile) return <p className="p-6">Loading...</p>;
-console.log("PROFILE:", profile);
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-54">
 
