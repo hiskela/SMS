@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function TeacherDashboard() {
-  const [students, setStudents] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -11,10 +11,10 @@ function TeacherDashboard() {
         setLoading(true);
 
         const res = await axios.get(
-          "http://localhost:3000/api/students"
+          "http://localhost:3000/api/classes/my-classes"
         );
 
-        setStudents(res.data);
+        setClasses(res.data);
       } catch (err) {
         console.log(err);
       } finally {
@@ -25,28 +25,32 @@ function TeacherDashboard() {
     fetchData();
   }, []);
 
+  const allStudents = classes.flatMap((cls) => cls.students || []);
+
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold">Teacher Dashboard 👨‍🏫</h1>
+      <h1 className="text-3xl font-bold">
+        Teacher Dashboard 👨‍🏫
+      </h1>
 
       <p className="text-gray-500 mt-2">
-        Manage your students and classes
+        Manage your classes and students
       </p>
 
+      {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+
         <div className="bg-white shadow p-4 rounded">
-          <h2 className="text-gray-500">Total Students</h2>
+          <h2 className="text-gray-500">My Classes</h2>
           <p className="text-3xl font-bold">
-            {loading ? "..." : students.length}
+            {loading ? "..." : classes.length}
           </p>
         </div>
 
         <div className="bg-white shadow p-4 rounded">
-          <h2 className="text-gray-500">Active Students</h2>
+          <h2 className="text-gray-500">Total Students</h2>
           <p className="text-3xl font-bold">
-            {loading
-              ? "..."
-              : students.filter((s) => s.status === "Active").length}
+            {loading ? "..." : allStudents.length}
           </p>
         </div>
 
@@ -55,27 +59,38 @@ function TeacherDashboard() {
           <p className="text-3xl font-bold">
             {loading
               ? "..."
-              : students.filter((s) => s.gender === "Female").length}
+              : allStudents.filter((s) => s.gender === "Female").length}
           </p>
         </div>
+
       </div>
 
-      <div className="mt-6 bg-white p-4 rounded shadow">
+      {/* CLASSES */}
+      <div className="mt-6">
         <h2 className="text-xl font-semibold mb-3">
-          Recent Students
+          My Classes
         </h2>
 
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <ul className="space-y-2">
-            {students.slice(0, 5).map((student) => (
-              <li key={student._id} className="border-b py-2">
-                {student.firstName} {student.lastName} -{" "}
-                {student.grade}
-              </li>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            {classes.map((cls) => (
+              <div
+                key={cls._id}
+                className="bg-white shadow p-4 rounded"
+              >
+                <h3 className="font-bold">{cls.name}</h3>
+                <p>Grade: {cls.grade}</p>
+                <p>Section: {cls.section}</p>
+                <p>
+                  Students: {cls.students?.length || 0}
+                </p>
+              </div>
             ))}
-          </ul>
+
+          </div>
         )}
       </div>
     </div>

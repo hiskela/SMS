@@ -31,7 +31,17 @@ const newClass = await Class.create({
     res.status(500).json({ message: err.message });
   }
 };
+const getMyClasses = async (req, res) => {
+  try {
+    const classes = await Class.find({
+      homeroomTeacher: req.user.id,
+    }).populate("students");
 
+    res.json(classes);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 // GET ALL
 const getAllClasses = async (req, res) => {
   try {
@@ -144,4 +154,5 @@ module.exports = {
   assignStudentToClass,
   getClassWithDetails,
   getTeacherClasses,
+getMyClasses,
 };

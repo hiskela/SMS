@@ -15,8 +15,8 @@ import AddClass from "./pages/classes/AddClass";
 import AddSubject from "./pages/subjects/AddSubject";
 import EditSubject from "./pages/subjects/EditSubject";
 import EditClass from "./pages/classes/EditClass";
+import TeacherDashboard from "./pages/dashboard/TeacherDashboard";
 import Profile from "./pages/profile/Profile";
-
 function App() {
   return (
     <Routes>
@@ -53,6 +53,7 @@ function App() {
 <Route path="/subjects/add" element={<AddSubject />} />
 <Route path="/subjects/edit/:id" element={<EditSubject />} />
 <Route path="/classes/add" element={<AddClass/>}/>
+
 <Route
   path="/classes/edit/:id"
   element={<EditClass />}
@@ -65,6 +66,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path="/profile/me" element={<EditProfile />} /> */}
         <Route path="/profile/me" element={<Profile />} />
+<Route path="/my-classes" element={<TeacherDashboard/>}/>
+
 
       </Route>
     </Routes>

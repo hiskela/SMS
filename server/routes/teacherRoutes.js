@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const {
   createTeacher,
   getTeachers,
@@ -15,5 +14,4 @@ router.get("/", getTeachers);
 
 // DELETE
 router.delete("/:id", deleteTeacher);
-
 module.exports = router;
