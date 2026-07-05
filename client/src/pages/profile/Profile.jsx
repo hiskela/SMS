@@ -6,6 +6,7 @@ function Profile() {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
 
+  // Load profile
   const loadProfile = async () => {
     try {
       const res = await api.get("/profile/me");
@@ -19,6 +20,7 @@ function Profile() {
     loadProfile();
   }, []);
 
+  // Handle input change
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -26,56 +28,95 @@ function Profile() {
     });
   };
 
+  // Open edit mode
+  const handleEdit = () => {
+    setForm(profile); // fill form with current data
+    setEditing(true);
+  };
+
+  // Cancel edit
+  const handleCancel = () => {
+    setEditing(false);
+    setForm({});
+  };
+
+  // Save profile
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       await api.put("/profile/me", form);
+      await loadProfile(); // refresh updated data
       setEditing(false);
-      loadProfile();
     } catch (err) {
-      console.log(err);
+      console.log("UPDATE ERROR:", err.response?.data || err.message);
     }
   };
 
-if (!profile) return <p>Loading...</p>;
-if (profile.error) return <p className="text-2xl text-red-600 ">⚠️Failed to load profile</p>;
+  if (!profile) return <p className="p-6">Loading...</p>;
+console.log("PROFILE:", profile);
   return (
-    <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">      <div className="bg-white shadow rounded-xl p-6 text-center">
+    <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-54">
 
-        <div className="w-16 h-16 mx-auto bg-blue-500 text-white flex items-center justify-center rounded-full text-3xl">
-          {profile.username?.charAt(0).toUpperCase()}
+      {/* LEFT CARD */}
+      <div className="bg-white shadow rounded-2xl p-6 text-center w-fit">
+
+        <div className="w-20 h-20 mx-auto bg-blue-600 text-white flex items-center justify-center rounded-full text-2xl font-bold">
+          {profile.firstName?.charAt(0) || profile.username?.charAt(0)}
         </div>
 
-        <h2 className="mt-4 text-sm font-bold">
-NAME        </h2>
+        <h2 className="mt-4 text-xl font-bold">
+          {profile.firstName} {profile.lastName}
+        </h2>
 
-        
-        <div className="mt-4 text-sm text-gray-600 space-y-2">
+        <p className="text-gray-500 capitalize">{profile.role}</p>
+
+        <div className="mt-4 text-sm text-gray-600 space-y-1">
           <p><strong>ID:</strong> {profile._id}</p>
-          <p className="text-sm"><strong>Role:</strong> {profile.role}</p>
+          <p><strong>Username:</strong> {profile.username}</p>
         </div>
 
-        <button
-          onClick={() => setEditing(!editing)}
-          className="mt-3 bg-blue-600 text-white font-mono font-extrabold uppercase px-4 py-1 rounded w-full"
-        >
-          {editing ? "Cancel Edit" : "Update Profile"}
-        </button>
+        {!editing ? (
+          <button
+            onClick={handleEdit}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded w-full"
+          >
+            Update Profile
+          </button>
+        ) : (
+          <button
+            onClick={handleCancel}
+            className="mt-4 bg-gray-500 text-white px-4 py-2 rounded w-full"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
 
-      </div>      <div className="md:col-span-2 bg-white shadow rounded-xl p-6">
+      {/* RIGHT SIDE */}
+      <div className="md:col-span-2 bg-white shadow rounded-2xl p-6 w-fit">
 
         <h2 className="text-xl font-bold mb-4">
           Profile Details
-        </h2>        {editing ? (
+        </h2>
+
+        {editing ? (
           <form onSubmit={handleSubmit} className="space-y-4">
 
             <input
-              name="username"
-              value={form.username || ""}
+              name="firstName"
+              value={form.firstName || ""}
               onChange={handleChange}
               className="w-full border p-2 rounded"
-              placeholder="Username"
+              placeholder="First Name"
+            />
+
+            <input
+              name="lastName"
+              value={form.lastName || ""}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+              placeholder="Last Name"
             />
 
             <input
@@ -96,38 +137,51 @@ NAME        </h2>
 
             <input
               name="address"
-              value={form.address||""}
+              value={form.address || ""}
               onChange={handleChange}
               className="w-full border p-2 rounded"
               placeholder="Address"
             />
 
-            <button className="bg-green-600 text-white px-4 py-2 rounded">
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-4 py-2 rounded w-full"
+            >
               Save Changes
             </button>
 
-          </form>        ) : (
-          <div className="space-y-3 text-gray-700">
+          </form>
+        ) : (
+         <div className="space-y-3 text-gray-700">
 
-            <p><strong>Username:</strong> {profile.username}</p>
-            <p><strong>Email:</strong> EMAIL</p>
-            <p><strong>Role:</strong> {profile.role}</p>
+  <p>
+    <strong>Full Name:</strong>{" "}
+    {profile.firstName} {profile.lastName}
+  </p>
 
-            {profile.student && (
-              <>
-                <p><strong>Student Name:</strong> {profile.student.name}</p>
-                <p><strong>Grade:</strong> {profile.student.grade}</p>
-              </>
-            )}
+  <p>
+    <strong>Username:</strong> {profile.username}
+  </p>
 
-            {profile.teacher && (
-              <>
-                <p><strong>Teacher Name:</strong> {profile.teacher.name}</p>
-              </>
-            )}
+  <p>
+    <strong>Email:</strong> {profile.email}
+  </p>
 
-          </div>
-        )}      </div>
+  <p>
+    <strong>Phone:</strong> {profile.phone}
+  </p>
+
+  <p>
+    <strong>Address:</strong> {profile.address}
+  </p>
+
+  <p>
+    <strong>Role:</strong> {profile.role}
+  </p>
+
+</div>
+        )}
+      </div>
     </div>
   );
 }

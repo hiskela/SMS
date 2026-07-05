@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const Teacher = require("../models/Teacher");
 const Student = require("../models/Student");
-
 exports.getMyProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
@@ -9,27 +8,47 @@ exports.getMyProfile = async (req, res) => {
       .populate("student");
 
     if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-      });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    let profileData = {
+    let profile = {
       _id: user._id,
       username: user.username,
       role: user.role,
-      email: user.teacher?.email || user.student?.email,
-      firstName:
-        user.teacher?.firstName || user.student?.firstName,
-      lastName:
-        user.teacher?.lastName || user.student?.lastName,
+      email: user.email || "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      address: "",
     };
 
-    res.json(profileData);
+    // TEACHER PROFILE
+    if (user.role === "teacher" && user.teacher) {
+      profile.firstName = user.teacher.firstName;
+      profile.lastName = user.teacher.lastName;
+      profile.email = user.teacher.email;
+      profile.phone = user.teacher.phone;
+      profile.address = user.teacher.address;
+    }
+
+    // STUDENT PROFILE
+    if (user.role === "student" && user.student) {
+      profile.firstName = user.student.firstName;
+      profile.lastName = user.student.lastName;
+      profile.email = user.student.email;
+      profile.phone = user.student.phone;
+      profile.address = user.student.address;
+    }
+
+    // ADMIN PROFILE (important)
+    if (user.role === "admin") {
+      profile.firstName = "Admin";
+      profile.lastName = "User";
+    }
+
+    return res.json(profile);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    return res.status(500).json({ message: err.message });
   }
 };
 
