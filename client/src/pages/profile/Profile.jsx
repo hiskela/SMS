@@ -28,12 +28,21 @@ function Profile() {
     });
   };
 
-  // Open edit mode
-  const handleEdit = () => {
-    setForm(profile); // fill form with current data
-    setEditing(true);
-  };
+const handleEdit = () => {
 
+setForm({
+  firstName: profile.firstName,
+  lastName: profile.lastName,
+  username: profile.username,
+  email: profile.email,
+  phone: profile.phone,
+  address: profile.address,
+  password:""
+});
+
+setEditing(true);
+
+};
   // Cancel edit
   const handleCancel = () => {
     setEditing(false);
@@ -117,7 +126,21 @@ function Profile() {
               className="w-full border p-2 rounded"
               placeholder="Last Name"
             />
-
+<input
+name="username"
+value={form.username || ""}
+onChange={handleChange}
+className="w-full border p-2 rounded"
+placeholder="Username"
+/>
+<input
+name="password"
+type="password"
+value={form.password || ""}
+onChange={handleChange}
+className="w-full border p-2 rounded"
+placeholder="New Password"
+/>
             <input
               name="email"
               value={form.email || ""}

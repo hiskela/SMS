@@ -91,12 +91,12 @@ function Sidebar({ isOpen }) {
                   My Classes
                 </NavLink>
 
-                <NavLink to="/students" className={linkClass}>
+                <NavLink to="/my-students" className={linkClass}>
                   <FaUserGraduate />
                   My Students
                 </NavLink>
 
-                <NavLink to="/subjects" className={linkClass}>
+                <NavLink to="/my-subjects" className={linkClass}>
                   <FaBook />
                   My Subjects
                 </NavLink>

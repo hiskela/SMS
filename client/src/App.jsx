@@ -18,6 +18,8 @@ import EditClass from "./pages/classes/EditClass";
 import AssignTeacher from "./pages/classes/AssignTeacher";
 import Profile from "./pages/profile/Profile";
 import ClassDetails from "./pages/classes/ClassDetails";
+import MyClasses from "./teacher/MyClasses";
+import MyStudents from "./teacher/MyStudents";
 function App() {
   return (
     <Routes>
@@ -70,7 +72,14 @@ function App() {
         <Route path="/students/add" element={<AddStudent />} />
         <Route path="/teachers/add" element={<AddTeacher />} />
 </Route>
-
+<Route 
+path="/my-classes"
+element={<MyClasses />}
+/>
+<Route 
+path="/my-students"
+element={<MyStudents />}
+/>
      
         <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path="/profile/me" element={<EditProfile />} /> */}
