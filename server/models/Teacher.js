@@ -37,10 +37,7 @@ const teacherSchema = new mongoose.Schema(
       default: []
     },
 
-    classes: {
-      type: [String], // multiple classes
-      default: []
-    },
+  
 
     status: {
       type: String,

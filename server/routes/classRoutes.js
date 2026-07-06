@@ -1,23 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const authMiddleware=require('../middleware/authMiddleware')
+const authMiddleware = require("../middleware/authMiddleware");
 
 const {
   createClass,
   getAllClasses,
-getClassById,
-updateClass,
+  getClassById,
+  updateClass,
   deleteClass,
-assignStudentToClass,
-assignTeacherToClass,
-getClassWithDetails,
-getTeacherClasses,
-getMyClasses
+  assignStudentToClass,
+  assignTeacherToClass,
+  getClassWithDetails,
+  getTeacherClasses,
+  getMyClasses,
 } = require("../controllers/classController");
 
 router.post("/", createClass);
 router.post("/assign-student", assignStudentToClass);
-router.post("/assign-teacher", assignTeacherToClass)
+router.post("/assign-teacher", assignTeacherToClass);
 router.get("/", getAllClasses);
 router.get("/my-classes", authMiddleware, getMyClasses);
 router.get("/:id", getClassById);

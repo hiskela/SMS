@@ -43,7 +43,7 @@ function ClassList() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-2">
         <h1 className="text-2xl font-bold">Classes</h1>
 
         <button
@@ -92,6 +92,12 @@ function ClassList() {
                 >
                   Delete
                 </button>
+<button
+  onClick={() => navigate(`/classes/${cls._id}/assign-teacher`)}
+  className="bg-blue-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+>
+  Assign Teacher
+</button>
               </td>
             </tr>
           ))}

@@ -84,18 +84,25 @@ const deleteClass = async (req, res) => {
   }
 };
 
-// ASSIGN TEACHER
-const assignTeacherToClass = async (req, res) => {
+
+const   assignTeacherToClass
+ = async (req, res) => {
   try {
-    const { classId, teacherId } = req.body;
+    const { teacherId } = req.body;
 
-    const foundClass = await Class.findById(classId);
-    foundClass.classTeacher = teacherId;
-    await foundClass.save();
+    const updated = await Class.findByIdAndUpdate(
+      req.params.id,
+      {
+        homeroomTeacher: teacherId,
+      },
+      { new: true }
+    );
 
-    res.json(foundClass);
+    res.json(updated);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 
@@ -155,4 +162,5 @@ module.exports = {
   getClassWithDetails,
   getTeacherClasses,
 getMyClasses,
+
 };
