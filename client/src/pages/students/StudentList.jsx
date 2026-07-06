@@ -4,197 +4,164 @@ import { useNavigate } from "react-router-dom";
 
 function StudentList() {
   const [students, setStudents] = useState([]);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
 
-  // FETCH STUDENTS
+  // Load teachers
   const fetchStudents = async () => {
     try {
       const res = await api.get("/students");
       setStudents(res.data);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  // DELETE STUDENT
-  const deleteStudent = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete?");
-    if (!confirm) return;
-
-    try {
-      await api.delete(`/students/${id}`);
-      setStudents(students.filter((s) => s._id !== id));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // FILTER SEARCH
-  const filteredStudents = students.filter((s) =>
+  const filteredStudents= students.filter((s) =>
     `${s.firstName} ${s.lastName} ${s.admissionNumber}`
       .toLowerCase()
       .includes(search.toLowerCase())
   );
 
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  // Delete teacher
+  const deleteStudent = async (id) => {
+    try {
+      await api.delete(`/students/${id}`);
+      setStudents(students.filter((s) => s._id !== id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="p-4 md:p-6">
-      {/* HEADER */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-2">
-        <h2 className="text-2xl font-bold">Student List</h2>
+      {/* HEADER SECTION */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+        <h1 className="text-2xl font-bold">Students</h1>
+
         <button
           onClick={() => navigate("/students/add")}
           className="bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto hover:bg-green-700 transition-colors"
         >
-          + Add New Student
+          + Add Student
         </button>
       </div>
 
-      {/* SEARCH */}
-      <input
-        type="text"
-        placeholder="Search student by name or ID..."
-        className="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {/* LOADING */}
+      {/* LOADING STATE */}
       {loading ? (
-        <p className="text-center text-gray-500 py-8">Loading students...</p>
+        <p className="text-center text-gray-500 py-8">Loading Students...</p>
       ) : (
         <>
-          {/* DESKTOP TABLE VIEW - Hidden on mobile */}
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-200">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="p-2 border border-gray-200">#</th>
-                  <th className="p-2 border border-gray-200">Student ID</th>
-                  <th className="p-2 border border-gray-200">Name</th>
-                  <th className="p-2 border border-gray-200">Age</th>
-                  <th className="p-2 border border-gray-200">Gender</th>
-                  <th className="p-2 border border-gray-200">Grade</th>
-                  <th className="p-2 border border-gray-200">Phone</th>
-                  <th className="p-2 border border-gray-200">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStudents.length === 0 ? (
-                  <tr>
-                    <td colSpan="8" className="p-4 text-center text-gray-500">
-                      No students found
-                    </td>
-                  </tr>
-                ) : (
-                  filteredStudents.map((student, i) => (
-                    <tr key={student._id} className="text-center hover:bg-gray-50">
-                      <td className="p-2 border border-gray-200">{i + 1}</td>
-                      <td className="p-2 border border-gray-200">{student.studentId}</td>
-                      <td className="p-2 border border-gray-200">
-                        {student.firstName} {student.lastName}
-                      </td>
-                      <td className="p-2 border border-gray-200">{student.age}</td>
-                      <td className="p-2 border border-gray-200">{student.gender}</td>
-                      <td className="p-2 border border-gray-200">{student.grade}</td>
-                      <td className="p-2 border border-gray-200">{student.phone}</td>
-                      <td className="p-2 border border-gray-200">
-                        <div className="flex gap-2 justify-center">
+          {/* Only show search and table if teachers exist */}
+          {filteredStudents.length > 0 ? (
+            <>
+              {/* SEARCH */}
+              <input
+                type="text"
+                placeholder="Search teacher by name or ID..."
+                className="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+
+              {/* DESKTOP TABLE VIEW - Hidden on mobile */}
+              <div className="hidden md:block bg-white shadow rounded overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gray-200 text-left">
+                      <th className="p-3">#</th>
+                      <th className="p-3">Name</th>
+                      <th className="p-3">Gender</th>
+<th className="p-3">Email</th>
+                      <th className="p-3">Phone</th>
+                      <th className="p-3">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredStudents.map((s, i) => (
+                      <tr key={s._id} className="border-t hover:bg-gray-50">
+                        <td className="p-3">{i + 1}</td>
+                        <td className="p-3">
+                          {s.firstName} {s.lastName}
+                        </td>
+                        <td className="p-3">{s.gender}</td>
+                        <td className="p-3">{s.email}</td>
+
+                        <td className="p-3">{s.phone}</td>
+                        <td className="p-3">
                           <button
-                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
-                            onClick={() => deleteStudent(student._id)}
+                            onClick={() => deleteStudent(s._id)}
+                            className="bg-red-500 text-white px-3 py-1 rounded cursor-pointer hover:bg-red-600 transition-colors"
                           >
                             Delete
                           </button>
-                          <button 
-                            onClick={() => navigate(`/students/${student._id}`)}
-                            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors"
-                          >
-                            View
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-          {/* MOBILE CARD VIEW - Visible only on mobile */}
-          <div className="md:hidden space-y-4">
-            {filteredStudents.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">No students found</p>
-            ) : (
-              filteredStudents.map((student, i) => (
-                <div
-                  key={student._id}
-                  className="bg-white shadow rounded-lg p-4 border border-gray-200"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="text-sm text-gray-500">#{i + 1}</span>
-                    <div className="flex gap-2">
+              {/* MOBILE CARD VIEW - Visible only on mobile */}
+              <div className="md:hidden space-y-4">
+                {filteredStudents.map((s, i) => (
+                  <div
+                    key={s._id}
+                    className="bg-white shadow rounded-lg p-4 border border-gray-200"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-sm text-gray-500">#{i + 1}</span>
                       <button
-                        onClick={() => navigate(`/students/${student._id}`)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors"
-                      >
-                        View
-                      </button>
-                      <button
-                        onClick={() => deleteStudent(student._id)}
+                        onClick={() => deleteStudent(s._id)}
                         className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors"
                       >
                         Delete
                       </button>
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                      <span className="font-medium text-gray-600">Student ID</span>
-                      <span className="text-gray-900 font-mono text-sm">
-                        {student.studentId}
-                      </span>
-                    </div>
+                    <div className="space-y-2">
+                      
 
-                    <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                      <span className="font-medium text-gray-600">Name</span>
-                      <span className="text-gray-900 font-medium">
-                        {student.firstName} {student.lastName}
-                      </span>
-                    </div>
+                      <div className="flex justify-between items-center border-b pb-2">
+                        <span className="font-medium text-gray-600">Name</span>
+                        <span className="text-gray-900">
+                          {s.firstName} {s.lastName}
+                        </span>
+                      </div>
 
-                    <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                      <span className="font-medium text-gray-600">Age</span>
-                      <span className="text-gray-900">{student.age}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                      <span className="font-medium text-gray-600">Gender</span>
-                      <span className="text-gray-900">{student.gender}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                      <span className="font-medium text-gray-600">Grade</span>
-                      <span className="text-gray-900">{student.grade}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium text-gray-600">Phone</span>
-                      <span className="text-gray-900">{student.phone}</span>
+                      <div className="flex justify-between items-center border-b pb-2">
+                        <span className="font-medium text-gray-600">Gender</span>
+                        <span className="text-gray-900">{s.gender}</span>
+                      </div>
+                      <div className="flex justify-between items-center border-b pb-2">
+                        <span className="font-medium text-gray-600">Email</span>
+                        <span className="text-gray-900">{s.email}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium text-gray-600">Phone</span>
+                        <span className="text-gray-900">{s.phone}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            // Show this when no teachers found
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No teachers found</p>
+              <p className="text-gray-400 text-sm mt-2">
+                Click "Add Student" to create your first student
+              </p>
+            </div>
+          )}
         </>
       )}
     </div>

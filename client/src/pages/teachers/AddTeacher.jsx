@@ -95,7 +95,7 @@ setSaving(false)
     <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center">
       <ClipLoader size={45} color="#2563eb" />
       <p className="mt-4 text-lg font-semibold">
-        Registering student...
+        Registering Teacher...
       </p>
     </div>
   </div>

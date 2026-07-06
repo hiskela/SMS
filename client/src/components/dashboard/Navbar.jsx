@@ -1,5 +1,7 @@
 import { FaBell, FaUserCircle } from "react-icons/fa";
 import { useContext } from "react";
+import { NavLink } from "react-router-dom";
+
 import { AuthContext } from "../../context/AuthContext";
 function Navbar({isOpen, setIsOpen}) {
 const {user}=useContext(AuthContext)
@@ -23,11 +25,12 @@ const {user}=useContext(AuthContext)
         />
 
         <div className="flex items-center gap-2">
-
-          <FaUserCircle
+<NavLink to="/profile/me">  <FaUserCircle
             size={30}
             className="text-blue-700 cursor-pointer"
-          />
+
+          /></NavLink>
+        
 
           <div>
             <p className="font-semibold capitalize ">{user?.fullName}</p>

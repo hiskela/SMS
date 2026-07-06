@@ -17,6 +17,7 @@ import EditSubject from "./pages/subjects/EditSubject";
 import EditClass from "./pages/classes/EditClass";
 import AssignTeacher from "./pages/classes/AssignTeacher";
 import Profile from "./pages/profile/Profile";
+import ClassDetails from "./pages/classes/ClassDetails";
 function App() {
   return (
     <Routes>
@@ -56,6 +57,10 @@ function App() {
 <Route
   path="/classes/:id/assign-teacher"
   element={<AssignTeacher />}
+/>
+<Route
+  path="/classes/details/:id"
+  element={<ClassDetails />}
 />
 
 <Route

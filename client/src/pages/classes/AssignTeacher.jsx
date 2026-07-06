@@ -33,10 +33,12 @@ function AssignTeacher() {
       alert("Teacher assigned successfully.");
 
       navigate("/classes");
-    } catch (err) {
-      console.log(err);
-      alert("Failed to assign teacher.");
-    }
+    }catch (err) {
+  console.log(err);
+  console.log(err.response?.data);
+
+  alert(err.response?.data?.message || "Failed to assign teacher.");
+}
   };
 
   return (
