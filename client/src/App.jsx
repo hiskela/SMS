@@ -56,6 +56,10 @@ function App() {
 path="/classes/assign-student"
 element={<AssignStudent/>}
 />
+<Route
+  path="/classes/:id"
+  element={<ClassDetails />}
+/>
   <Route path="/classes" element={<ClassList />} />
   <Route path="/subjects" element={<SubjectList />} />
 <Route path="/subjects/add" element={<AddSubject />} />

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-
 function ClassList() {
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -121,6 +120,14 @@ function ClassList() {
                           >
                             Assign Teacher
                           </button>
+<button
+onClick={()=>
+navigate(`/classes/${cls._id}`)
+}
+className="bg-purple-600 text-white px-3 py-1 rounded"
+>
+View
+</button>
 <button
 
 onClick={()=>
