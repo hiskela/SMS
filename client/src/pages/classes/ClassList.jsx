@@ -119,8 +119,21 @@ function ClassList() {
                             onClick={() => navigate(`/classes/${cls._id}/assign-teacher`)}
                             className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors ml-2"
                           >
-                            Assign
+                            Assign Teacher
                           </button>
+<button
+
+onClick={()=>
+navigate("/classes/assign-student")
+}
+
+className="bg-green-800 text-white px-3 py-1 rounded"
+
+>
+
+Assign Student
+
+</button>
                           <button
                             onClick={() => handleDelete(cls._id)}
                             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors ml-2"
@@ -151,8 +164,21 @@ function ClassList() {
                           onClick={() => navigate(`/classes/${cls._id}/assign-teacher`)}
                           className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors ml-1"
                         >
-                          Assign
+                          Assign Teacher
                         </button>
+<button
+
+onClick={()=>
+navigate("/classes/assign-student")
+}
+
+className="bg-purple-600 text-white px-3 py-1 rounded"
+
+>
+
+Assign Student
+
+</button>
                         <button
                           onClick={() => handleDelete(cls._id)}
                           className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors ml-1"

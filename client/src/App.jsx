@@ -20,6 +20,7 @@ import Profile from "./pages/profile/Profile";
 import ClassDetails from "./pages/classes/ClassDetails";
 import MyClasses from "./teacher/MyClasses";
 import MyStudents from "./teacher/MyStudents";
+import AssignStudent from "./pages/classes/AssignStudent";
 function App() {
   return (
     <Routes>
@@ -51,6 +52,10 @@ function App() {
 <Route element={<ProtectedLayout allowedRoles={["admin"]} />}>
   <Route path="/students" element={<StudentList />} />
   <Route path="/teachers" element={<TeacherList />} />
+<Route
+path="/classes/assign-student"
+element={<AssignStudent/>}
+/>
   <Route path="/classes" element={<ClassList />} />
   <Route path="/subjects" element={<SubjectList />} />
 <Route path="/subjects/add" element={<AddSubject />} />
