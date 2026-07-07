@@ -1,158 +1,116 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 
+function MyStudents() {
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-function MyStudents(){
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const res = await api.get("/classes/my-students");
+        setStudents(res.data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-const [students,setStudents]=useState([]);
-const [loading,setLoading]=useState(true);
+    fetchStudents();
+  }, []);
 
+  return (
+    <div className="p-4 md:p-6 max-w-7xl mx-auto">
+      <h1 className="text-2xl md:text-3xl font-bold">My Students 👨‍🎓</h1>
+      <p className="text-gray-500 mt-2">
+        List of students assigned to your classes
+      </p>
 
-useEffect(()=>{
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      ) : students.length === 0 ? (
+        <div className="bg-white rounded-xl shadow-md p-8 text-center mt-6">
+          <p className="text-gray-500 text-lg">No students assigned yet.</p>
+          <p className="text-gray-400 text-sm mt-2">
+            Students will appear here once they are assigned to your classes.
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden md:block bg-white shadow rounded-xl overflow-x-auto mt-6">
+            <table className="w-full">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="p-3 text-left text-sm font-semibold">#</th>
+                  <th className="p-3 text-left text-sm font-semibold">Name</th>
+                  <th className="p-3 text-left text-sm font-semibold">Gender</th>
+                  <th className="p-3 text-left text-sm font-semibold">Email</th>
+                  <th className="p-3 text-left text-sm font-semibold">Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((s, index) => (
+                  <tr key={s._id} className="border-t hover:bg-gray-50">
+                    <td className="p-3 text-sm">{index + 1}</td>
+                    <td className="p-3 font-medium">
+                      {s.firstName} {s.lastName}
+                    </td>
+                    <td className="p-3">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        s.gender === 'Male' ? 'bg-blue-100 text-blue-800' : 
+                        s.gender === 'Female' ? 'bg-pink-100 text-pink-800' : 
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {s.gender}
+                      </span>
+                    </td>
+                    <td className="p-3 text-sm">{s.email}</td>
+                    <td className="p-3 text-sm">{s.phone}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-const fetchStudents=async()=>{
+          {/* Mobile Cards */}
+          <div className="md:hidden space-y-4 mt-6">
+            {students.map((s, index) => (
+              <div key={s._id} className="bg-white shadow rounded-lg p-4 border">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <span className="text-gray-500 text-sm">#{index + 1}</span>
+                    <p className="font-semibold text-base">
+                      {s.firstName} {s.lastName}
+                    </p>
+                  </div>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    s.gender === 'Male' ? 'bg-blue-100 text-blue-800' : 
+                    s.gender === 'Female' ? 'bg-pink-100 text-pink-800' : 
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {s.gender}
+                  </span>
+                </div>
+                <div className="space-y-1 text-sm text-gray-600">
+                  <p>📧 {s.email}</p>
+                  <p>📱 {s.phone}</p>
+                </div>
+              </div>
+            ))}
+          </div>
 
-try{
-
-const res=await api.get("/classes/my-students");
-
-setStudents(res.data);
-
-
-}catch(err){
-
-console.log(err);
-
+          {/* Results Counter */}
+          <div className="mt-4 text-sm text-gray-500 text-center">
+            Showing {students.length} student{students.length > 1 ? 's' : ''}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
-finally{
-
-setLoading(false);
-
-}
-
-};
-
-
-fetchStudents();
-
-
-},[]);
-
-
-
-return(
-
-<div className="p-6">
-
-
-<h1 className="text-3xl font-bold">
-My Students 👨‍🎓
-</h1>
-
-
-{
-loading ?
-
-<p className="mt-5">
-Loading students...
-</p>
-
-
-:
-
-students.length===0 ?
-
-<p className="mt-5 text-gray-500">
-No students assigned yet.
-</p>
-
-
-:
-
-<div className="mt-6 bg-white shadow rounded-xl overflow-hidden">
-
-
-<table className="w-full">
-
-<thead className="bg-gray-100">
-
-<tr>
-
-<th className="p-3 text-left">
-Name
-</th>
-
-<th className="p-3 text-left">
-Gender
-</th>
-
-<th className="p-3 text-left">
-Email
-</th>
-
-<th className="p-3 text-left">
-Phone
-</th>
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-{
-students.map((s)=>(
-
-<tr 
-key={s._id}
-className="border-t"
->
-
-<td className="p-3">
-{s.firstName} {s.lastName}
-</td>
-
-
-<td className="p-3">
-{s.gender}
-</td>
-
-
-<td className="p-3">
-{s.email}
-</td>
-
-
-<td className="p-3">
-{s.phone}
-</td>
-
-
-</tr>
-
-
-))
-}
-
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-}
-
-
-</div>
-
-);
-
-
-}
-
 
 export default MyStudents;

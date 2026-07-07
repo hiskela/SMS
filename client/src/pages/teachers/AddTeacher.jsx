@@ -89,6 +89,12 @@ setSaving(false)
 
   return (
     <div className="p-6">
+  <button
+            onClick={() => navigate("/teachers")}
+            className="text-white mb-2 bg-pink-600 p-1 rounded"
+          >
+            ← Back
+          </button>
       <h1 className="text-2xl font-bold mb-4">Add Teacher</h1>
 {saving && (
   <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">

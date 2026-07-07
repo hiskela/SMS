@@ -21,6 +21,10 @@ import ClassDetails from "./pages/classes/ClassDetails";
 import MyClasses from "./teacher/MyClasses";
 import MyStudents from "./teacher/MyStudents";
 import AssignStudent from "./pages/classes/components/AddStudentModal";
+import StudentDetails from "./pages/students/StudentDetails";
+import EditStudent from "./pages/students/EditStudent";
+import EditTeacher from "./pages/teachers/EditTeacher";
+import TeacherDetails from "./pages/teachers/TeacherDetails";
 function App() {
   return (
     <Routes>
@@ -56,6 +60,9 @@ function App() {
 path="/classes/assign-student"
 element={<AssignStudent/>}
 />
+<Route path="/teachers/:id" element={<TeacherDetails />} />
+
+<Route path="/teachers/edit/:id" element={<EditTeacher />} />
 <Route
   path="/classes/:id"
   element={<ClassDetails />}
@@ -80,6 +87,9 @@ element={<AssignStudent/>}
 />
         <Route path="/students/add" element={<AddStudent />} />
         <Route path="/teachers/add" element={<AddTeacher />} />
+<Route path="/students/:id" element={<StudentDetails />} />
+
+<Route path="/students/edit/:id" element={<EditStudent />} />
 </Route>
 <Route 
 path="/my-classes"

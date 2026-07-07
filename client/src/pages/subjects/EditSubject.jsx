@@ -38,6 +38,12 @@ function EditSubject() {
 
   return (
     <div className="p-6">
+  <button
+            onClick={() => navigate("/subjects")}
+            className="text-white mb-2 bg-pink-600 p-1 rounded"
+          >
+            ← Back
+          </button>
       <h2 className="text-xl font-bold mb-4">Edit Subject</h2>
 
       <SubjectForm

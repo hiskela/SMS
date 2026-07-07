@@ -38,6 +38,12 @@ function EditClass() {
 
   return (
     <div className="p-6">
+  <button
+            onClick={() => navigate("/classes")}
+            className="text-white mb-2 bg-pink-600 p-1 rounded"
+          >
+            ← Back
+          </button>
       <h2 className="text-2xl font-bold mb-5">
         Edit Class
       </h2>
