@@ -15,12 +15,12 @@ import AddClass from "./pages/classes/AddClass";
 import AddSubject from "./pages/subjects/AddSubject";
 import EditSubject from "./pages/subjects/EditSubject";
 import EditClass from "./pages/classes/EditClass";
-import AssignTeacher from "./pages/classes/AssignTeacher";
+import AssignTeacher from "./pages/classes/components/AddTeacherModal";
 import Profile from "./pages/profile/Profile";
 import ClassDetails from "./pages/classes/ClassDetails";
 import MyClasses from "./teacher/MyClasses";
 import MyStudents from "./teacher/MyStudents";
-import AssignStudent from "./pages/classes/AssignStudent";
+import AssignStudent from "./pages/classes/components/AddStudentModal";
 function App() {
   return (
     <Routes>
@@ -70,7 +70,7 @@ element={<AssignStudent/>}
   element={<AssignTeacher />}
 />
 <Route
-  path="/classes/details/:id"
+  path="/classes/:id"
   element={<ClassDetails />}
 />
 
