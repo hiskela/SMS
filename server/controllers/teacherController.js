@@ -37,12 +37,15 @@ const teacherId = `TCH-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
     // 5. create user account (same as student logic)
-    await User.create({
+   const user= await User.create({
       username,
       password: hashedPassword,
       role: "teacher",
       teacher: teacher._id,
     });
+teacher.user = user._id;
+await teacher.save();
+
    await sendEmail(
       teacher.email,
       "Teacher Login Credentials",

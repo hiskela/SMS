@@ -6,9 +6,10 @@ const authMiddleware = require("../middleware/authMiddleware");
 const {
   getMyProfile,
   updateMyProfile,
+changePassword
 } = require("../controllers/profileController");
 
 router.get("/me", authMiddleware, getMyProfile);
 router.put("/me", authMiddleware, updateMyProfile);
-
+router.put("/change-password",authMiddleware,changePassword);
 module.exports = router;

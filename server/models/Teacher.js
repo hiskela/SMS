@@ -37,7 +37,10 @@ const teacherSchema = new mongoose.Schema(
       default: []
     },
 
-  
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+},
 
     status: {
       type: String,

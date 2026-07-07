@@ -45,7 +45,11 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+class: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Class",
+  default: null,
+},
     familyPhone: {
       type: String,
       required: true,

@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Teacher = require("../models/Teacher");
 const Student = require("../models/Student");
+const bcrypt=require("bcrypt")
 exports.getMyProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
@@ -52,7 +53,78 @@ exports.getMyProfile = async (req, res) => {
   }
 };
 
-// UPDATE MY PROFILE
+exports.changePassword = async (req, res) => {
+  try {
+
+ 
+
+
+    const user = await User.findById(req.user.id);
+
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+
+    const {
+      currentPassword,
+      newPassword
+    } = req.body;
+
+
+    if (!currentPassword || !newPassword) {
+
+      return res.status(400).json({
+        message: "Password fields are empty"
+      });
+
+    }
+
+
+    const isMatch = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+
+
+
+    if (!isMatch) {
+
+      return res.status(400).json({
+        message:"Current password is incorrect"
+      });
+
+    }
+
+
+    user.password = await bcrypt.hash(
+      newPassword,
+      10
+    );
+
+
+    await user.save();
+
+
+    res.json({
+      message:"Password changed successfully"
+    });
+
+
+  } catch(err){
+
+    console.log(err);
+
+    res.status(500).json({
+      message:err.message
+    });
+
+  }
+};
 exports.updateMyProfile = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -65,35 +137,78 @@ exports.updateMyProfile = async (req, res) => {
       });
     }
 
+
+    // Update username
+    if(req.body.username){
+      user.username = req.body.username;
+    }
+
+
+    // Update password
+    if(req.body.password){
+
+      const bcrypt = require("bcrypt");
+
+      const hashedPassword = await bcrypt.hash(
+        req.body.password,
+        10
+      );
+
+      user.password = hashedPassword;
+    }
+
+
+    await user.save();
+
+
+
+    // Update teacher information
     if (user.role === "teacher") {
+
       const teacher = await Teacher.findById(user.teacher);
 
-      teacher.firstName = req.body.firstName;
-      teacher.lastName = req.body.lastName;
-      teacher.email = req.body.email;
-      teacher.phone = req.body.phone;
-      teacher.address = req.body.address;
+      if(teacher){
 
-      await teacher.save();
+        teacher.firstName = req.body.firstName;
+        teacher.lastName = req.body.lastName;
+        teacher.email = req.body.email;
+        teacher.phone = req.body.phone;
+        teacher.address = req.body.address;
+
+        await teacher.save();
+
+      }
     }
 
+
+
+    // Update student information
     if (user.role === "student") {
+
       const student = await Student.findById(user.student);
 
-      student.email = req.body.email;
-      student.phone = req.body.phone;
-      student.address = req.body.address;
+      if(student){
 
-      await student.save();
+        student.email = req.body.email;
+        student.phone = req.body.phone;
+        student.address = req.body.address;
+
+        await student.save();
+
+      }
     }
 
+
     res.json({
-      message: "Profile updated successfully.",
+      message:"Profile updated successfully"
     });
 
-  } catch (err) {
+
+  } catch(err){
+
     res.status(500).json({
-      message: err.message,
+      message:err.message
     });
+
   }
 };
