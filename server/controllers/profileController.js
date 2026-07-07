@@ -212,3 +212,30 @@ exports.updateMyProfile = async (req, res) => {
 
   }
 };
+
+const uploadAvatar = async(req,res)=>{
+
+try{
+
+const user = await User.findById(req.user.id);
+
+user.avatar = `/uploads/avatars/${req.file.filename}`;
+
+await user.save();
+
+res.json(user);
+
+}
+catch(err){
+
+res.status(500).json({
+message:err.message
+});
+
+}
+
+};
+
+module.exports={
+uploadAvatar
+};

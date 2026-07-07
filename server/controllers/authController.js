@@ -22,6 +22,7 @@ message: "Invalid username or password"
 const token=jwt.sign({
 id: user._id,
 role: user.role,
+teacher: user.teacher
 },
 process.env.JWT_SECRET,
 {expiresIn: "1d",

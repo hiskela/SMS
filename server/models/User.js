@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "teacher", "student"],
       required: true,
     },
-
+avatar:{
+        type:String,
+        default:""
+    },
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",

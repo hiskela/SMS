@@ -31,33 +31,92 @@ const newClass = await Class.create({
     res.status(500).json({ message: err.message });
   }
 };
+
+
 const getMyClasses = async (req, res) => {
   try {
+
+
     const teacher = await Teacher.findOne({
-      user: req.user.id,
+      user: req.user.id
     });
+
 
     if (!teacher) {
       return res.status(404).json({
-        message: "Teacher not found",
+        message: "Teacher profile not found"
       });
     }
 
+
     const classes = await Class.find({
-      homeroomTeacher: teacher._id,
+      homeroomTeacher: teacher._id
     })
-      .populate("students")
-      .populate("homeroomTeacher", "firstName lastName");
+    .populate("students")
+    .populate(
+      "homeroomTeacher",
+      "firstName lastName"
+    );
 
-    res.json(classes);
 
-  } catch (err) {
+
+
+    res.status(200).json(classes);
+
+
+  } catch(err) {
+
+    console.log(err);
+
     res.status(500).json({
-      message: err.message,
+      message: err.message
     });
+
   }
 };
-// GET ALL
+const getMyStudents = async (req,res)=>{
+  try{
+
+    const teacher = await Teacher.findOne({
+      user:req.user.id
+    });
+
+
+    if(!teacher){
+      return res.status(404).json({
+        message:"Teacher profile not found"
+      });
+    }
+
+
+    const classes = await Class.find({
+      homeroomTeacher:teacher._id
+    })
+    .populate("students");
+
+
+    let students=[];
+
+
+    classes.forEach(cls=>{
+      students.push(...cls.students);
+    });
+
+
+    res.json(students);
+
+
+  }catch(err){
+
+    console.log(err);
+
+    res.status(500).json({
+      message:err.message
+    });
+
+  }
+};
+
 const getAllClasses = async (req, res) => {
   try {
     const classes = await Class.find()
@@ -106,9 +165,17 @@ const assignTeacherToClass = async (req,res)=>{
 
     const { teacherId } = req.body;
 
+const teacher = await Teacher.findById(teacherId);
 
-    const existingClass = await Class.findOne({
-      homeroomTeacher: teacherId
+if (!teacher) {
+  return res.status(404).json({
+    message: "Teacher not found",
+  });
+}
+    const existingClass = await Class.findOne(
+req.params.id,
+{
+      homeroomTeacher: teacher._id
     });
 
 
@@ -157,60 +224,71 @@ const assignTeacherToClass = async (req,res)=>{
 };
 const assignStudentToClass = async (req, res) => {
   try {
+
     const { classId, studentId } = req.body;
+
 
     const student = await Student.findById(studentId);
 
     if (!student) {
       return res.status(404).json({
-        message: "Student not found",
+        message:"Student not found"
       });
     }
 
-    const newClass = await Class.findById(classId);
 
-    if (!newClass) {
+    const cls = await Class.findById(classId);
+
+    if (!cls) {
       return res.status(404).json({
-        message: "Class not found",
+        message:"Class not found"
       });
     }
 
-    // Student already belongs to another class
-    if (
-      student.class &&
-      student.class.toString() !== classId
-    ) {
+
+    // remove from old class if already assigned
+    if(student.class){
+
       const oldClass = await Class.findById(student.class);
 
-      return res.status(400).json({
-        message: `Student is already assigned to ${oldClass.name}. Remove or move the student first.`,
-      });
+      if(oldClass){
+
+        oldClass.students =
+        oldClass.students.filter(
+          id => id.toString() !== studentId
+        );
+
+        await oldClass.save();
+
+      }
+
     }
 
-    // Student already belongs to this class
-    if (
-      student.class &&
-      student.class.toString() === classId
-    ) {
-      return res.status(400).json({
-        message: "Student is already assigned to this class.",
-      });
-    }
 
-    student.class = classId;
+    // assign new class
+
+    student.class = cls._id;
     await student.save();
 
-    newClass.students.push(student._id);
-    await newClass.save();
+
+    if(!cls.students.includes(student._id)){
+      cls.students.push(student._id);
+    }
+
+    await cls.save();
+
 
     res.json({
-      message: "Student assigned successfully.",
+      message:"Student assigned successfully"
     });
 
-  } catch (err) {
+
+  } catch(err){
+
     res.status(500).json({
-      message: err.message,
+      message:err.message
     });
+
   }
 };
 const removeStudentFromClass = async(req,res)=>{
@@ -338,28 +416,7 @@ const getClassWithDetails = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-// In your backend
-const getMyStudents = async (req, res) => {
-  try {
-    const teacherId = req.user._id;
-    
-    // Find classes where this teacher is homeroom teacher
-    const classes = await Class.find({ homeroomTeacher: teacherId })
-      .populate('students');
-    
-    // Extract all students from all classes
-    const students = classes.flatMap(cls => cls.students);
-    
-    // Remove duplicates
-    const uniqueStudents = [...new Map(
-      students.map(s => [s._id.toString(), s])
-    ).values()];
-    
-    res.status(200).json(uniqueStudents);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+
 
 // TEACHER CLASSES
 const getTeacherClasses = async (req, res) => {

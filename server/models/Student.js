@@ -35,30 +35,35 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Use only ONE of these
     assignedClass: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Class",
       default: null,
     },
+    // OR
+    // class: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Class",
+    //   default: null,
+    // },
 
     phone: {
       type: String,
       required: true,
     },
-class: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Class",
-  default: null,
-},
+
     familyPhone: {
       type: String,
       required: true,
     },
-email: {
-  type: String,
-  required: true,
-unique: true
-},
+
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+
     address: {
       type: String,
       required: true,
