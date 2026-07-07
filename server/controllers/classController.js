@@ -338,41 +338,26 @@ const getClassWithDetails = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+// In your backend
 const getMyStudents = async (req, res) => {
   try {
-
-    const teacher = await Teacher.findOne({
-      user: req.user.id
-    });
-
-    if (!teacher) {
-      return res.status(404).json({
-        message: "Teacher profile not found"
-      });
-    }
-
-
-    const classes = await Class.find({
-      homeroomTeacher: teacher._id
-    }).populate("students");
-
-
-    let students = [];
-
-    classes.forEach((cls)=>{
-      students.push(...cls.students);
-    });
-
-
-    res.json(students);
-
-
-  } catch(err){
-
-    res.status(500).json({
-      message: err.message
-    });
-
+    const teacherId = req.user._id;
+    
+    // Find classes where this teacher is homeroom teacher
+    const classes = await Class.find({ homeroomTeacher: teacherId })
+      .populate('students');
+    
+    // Extract all students from all classes
+    const students = classes.flatMap(cls => cls.students);
+    
+    // Remove duplicates
+    const uniqueStudents = [...new Map(
+      students.map(s => [s._id.toString(), s])
+    ).values()];
+    
+    res.status(200).json(uniqueStudents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 

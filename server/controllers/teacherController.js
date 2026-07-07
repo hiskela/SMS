@@ -77,6 +77,52 @@ Please change your password after your first login.`
     });
   }
 };
+// GET SINGLE TEACHER
+const getTeacherById = async (req, res) => {
+  try {
+    const teacher = await Teacher.findById(req.params.id);
+
+    if (!teacher) {
+      return res.status(404).json({
+        message: "Teacher not found",
+      });
+    }
+
+    res.json(teacher);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+// UPDATE TEACHER
+const updateTeacher = async (req, res) => {
+  try {
+    const teacher = await Teacher.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        returnDocument: "after",
+      }
+    );
+
+    if (!teacher) {
+      return res.status(404).json({
+        message: "Teacher not found",
+      });
+    }
+
+    res.json({
+      message: "Teacher updated successfully",
+      teacher,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 const deleteTeacher = async (req, res) => {
   try {
     await Teacher.findByIdAndDelete(req.params.id);
@@ -98,5 +144,7 @@ module.exports = {
   createTeacher,
   getTeachers,
   deleteTeacher,
+updateTeacher,
+getTeacherById
 
 };

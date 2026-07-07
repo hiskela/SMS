@@ -14,11 +14,15 @@ exports.createStudent = async (req, res) => {
 
     // 2. generate student ID
 const studentId = `STU-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-const existing = await Student.findOne({ email: req.body.email });
+const existingStudent = await Student.findOne({
+  firstName: req.body.firstName.trim(),
+  lastName: req.body.lastName.trim(),
+  email: req.body.email.trim().toLowerCase(),
+});
 
-if (existing) {
+if (existingStudent) {
   return res.status(400).json({
-    message: "Email already exists"
+    message: "A student with the same first name, last name, and email already exists.",
   });
 }
     // 3. create student
@@ -74,6 +78,55 @@ exports.getStudents = async (req, res) => {
     res.json(students);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+// GET ONE STUDENT
+exports.getStudentById = async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.id);
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found",
+      });
+    }
+
+    res.json(student);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+
+// UPDATE STUDENT
+exports.updateStudent = async (req, res) => {
+  try {
+    const student = await Student.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        returnDocument: "after",
+        runValidators: true,
+      }
+    );
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found",
+      });
+    }
+
+    res.json({
+      message: "Student updated successfully",
+      student,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 

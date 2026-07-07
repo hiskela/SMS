@@ -31,7 +31,7 @@ if (!name || !code) {
 
 if (existing) {
   return res.status(400).json({
-    message: "Subject code already exists."
+    message: "Subject  already exists."
   });
 }
     const subjectId = await generateSubjectId();

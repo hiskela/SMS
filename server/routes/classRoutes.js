@@ -14,8 +14,7 @@ const {
   getTeacherClasses,
   getMyClasses,
   getMyStudents,
-  moveStudentToClass
-,
+  moveStudentToClass,
 removeStudentFromClass
 } = require("../controllers/classController");
 
