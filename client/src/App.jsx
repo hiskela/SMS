@@ -25,6 +25,7 @@ import StudentDetails from "./pages/students/StudentDetails";
 import EditStudent from "./pages/students/EditStudent";
 import EditTeacher from "./pages/teachers/EditTeacher";
 import TeacherDetails from "./pages/teachers/TeacherDetails";
+import Settings from "./pages/settings/Settings";
 function App() {
   return (
     <Routes>
@@ -53,58 +54,42 @@ function App() {
           </ProtectedRoute>
         }
       >
-<Route element={<ProtectedLayout allowedRoles={["admin"]} />}>
-  <Route path="/students" element={<StudentList />} />
-  <Route path="/teachers" element={<TeacherList />} />
-<Route
-path="/classes/assign-student"
-element={<AssignStudent/>}
-/>
-<Route path="/teachers/:id" element={<TeacherDetails />} />
+        <Route element={<ProtectedLayout allowedRoles={["admin"]} />}>
+          <Route path="/students" element={<StudentList />} />
+          <Route path="/teachers" element={<TeacherList />} />
+          <Route path="/classes/assign-student" element={<AssignStudent />} />
+          <Route path="/teachers/:id" element={<TeacherDetails />} />
 
-<Route path="/teachers/edit/:id" element={<EditTeacher />} />
-<Route
-  path="/classes/:id"
-  element={<ClassDetails />}
-/>
-  <Route path="/classes" element={<ClassList />} />
-  <Route path="/subjects" element={<SubjectList />} />
-<Route path="/subjects/add" element={<AddSubject />} />
-<Route path="/subjects/edit/:id" element={<EditSubject />} />
-<Route path="/classes/add" element={<AddClass/>}/>
-<Route
-  path="/classes/:id/assign-teacher"
-  element={<AssignTeacher />}
-/>
-<Route
-  path="/classes/:id"
-  element={<ClassDetails />}
-/>
+          <Route path="/teachers/edit/:id" element={<EditTeacher />} />
+          <Route path="/classes/:id" element={<ClassDetails />} />
+          <Route path="/classes" element={<ClassList />} />
+          <Route path="/subjects" element={<SubjectList />} />
+          <Route path="/subjects/add" element={<AddSubject />} />
+          <Route path="/subjects/edit/:id" element={<EditSubject />} />
+          <Route path="/classes/add" element={<AddClass />} />
+          <Route
+            path="/classes/:id/assign-teacher"
+            element={<AssignTeacher />}
+          />
+        <Route path="/settings" element={<Settings />} />
 
-<Route
-  path="/classes/edit/:id"
-  element={<EditClass />}
-/>
-        <Route path="/students/add" element={<AddStudent />} />
-        <Route path="/teachers/add" element={<AddTeacher />} />
-<Route path="/students/:id" element={<StudentDetails />} />
+          <Route path="/classes/:id" element={<ClassDetails />} />
 
-<Route path="/students/edit/:id" element={<EditStudent />} />
-</Route>
-<Route 
-path="/my-classes"
-element={<MyClasses />}
-/>
-<Route 
-path="/my-students"
-element={<MyStudents />}
-/>
-     
+          <Route path="/classes/edit/:id" element={<EditClass />} />
+          <Route path="/students/add" element={<AddStudent />} />
+          <Route path="/teachers/add" element={<AddTeacher />} />
+          <Route path="/students/:id" element={<StudentDetails />} />
+
+          <Route path="/students/edit/:id" element={<EditStudent />} />
+        </Route>
+        <Route element={<ProtectedLayout allowedRoles={["teacher"]} />}>
+
+        <Route path="/my-classes" element={<MyClasses />} />
+        <Route path="/my-students" element={<MyStudents />} />
+        </Route>
+
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* <Route path="/profile/me" element={<EditProfile />} /> */}
         <Route path="/profile/me" element={<Profile />} />
-
-
       </Route>
     </Routes>
   );

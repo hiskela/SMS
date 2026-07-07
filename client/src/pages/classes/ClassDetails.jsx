@@ -133,7 +133,7 @@ function ClassDetails() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b bg-gray-50">
-                    <th className="text-left p-2 text-sm font-semibold">Admission No</th>
+                    <th className="text-left p-2 text-sm font-semibold">Student ID</th>
                     <th className="text-left p-2 text-sm font-semibold">Name</th>
                     <th className="text-left p-2 text-sm font-semibold">Gender</th>
                     <th className="text-left p-2 text-sm font-semibold">Actions</th>
@@ -142,7 +142,7 @@ function ClassDetails() {
                 <tbody>
                   {classData.students.map((student) => (
                     <tr key={student._id} className="border-b hover:bg-gray-50">
-                      <td className="p-2 text-sm">{student.admissionNumber}</td>
+                      <td className="p-2 text-sm">{student.studentId}</td>
                       <td className="p-2 font-medium">
                         {student.firstName} {student.lastName}
                       </td>
@@ -190,7 +190,7 @@ function ClassDetails() {
                         {student.firstName} {student.lastName}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Admission: {student.admissionNumber}
+                        ID: {student.studentId}
                       </p>
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${

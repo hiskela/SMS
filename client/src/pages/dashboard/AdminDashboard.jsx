@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-
+import { useSettings } from "../../context/SettingsContext";
 import axios from "axios";
 function AdminDashboard() {
+const {settings}=useSettings();
 const [stats, setStats]=useState({})
 useEffect(()=>{
 axios.get("http://localhost:3000/api/dashboard/stats")
@@ -10,13 +11,17 @@ axios.get("http://localhost:3000/api/dashboard/stats")
 }, [])
   return (
     <div>
+<div className="flex justify-between">
+<h2 className="text-sm  font-bold">Academic Year : <span className="text-xl font-bold">{settings?.academicYear}</span></h2>
+<h2 className="text-xl font-bold">Semester : <span className="text-sm ">{settings?.semester}</span></h2>
 
+</div>
       <h1 className="text-3xl font-bold">
         Welcome Back 👋
       </h1>
 
       <p className="text-gray-600 mt-2">
-        School Management Dashboard
+     {settings?.schoolName} Dashboard
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">

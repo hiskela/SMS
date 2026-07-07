@@ -10,10 +10,11 @@ const navigate=useNavigate();
     const fetchClasses = async () => {
       try {
         const res = await api.get("/classes/my-classes");
+
         setClasses(res.data);
 
       } catch(err) {
-        console.log(err);
+    console.log("Error:", err.response?.data || err.message);
       }
     };
 

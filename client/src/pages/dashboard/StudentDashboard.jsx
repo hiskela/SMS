@@ -40,7 +40,7 @@ function StudentDashboard() {
   return (
     <div className="p-4">
       <h1 className="text-3xl font-bold">
-        Student Dashboard 🎓
+       {student.firstName}'s Dashboard 🎓
       </h1>
 
       <div className="mt-6 bg-white shadow p-6 rounded">

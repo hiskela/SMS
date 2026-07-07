@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useSettings } from "../../context/SettingsContext";
 import {
   FaHome,
   FaUserGraduate,
@@ -15,7 +16,7 @@ import { AuthContext } from "../../context/AuthContext";
 function Sidebar({ isOpen }) {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
-
+const {settings}=useSettings();
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -39,7 +40,7 @@ function Sidebar({ isOpen }) {
           {/* Logo */}
           <div className="border-b border-blue-700 pb-4 mb-6">
             <h1 className="text-2xl font-bold">
-              School MS
+             {settings?.schoolName||"School Name"}
             </h1>
 
             <p className="text-sm text-blue-200 mt-2">
@@ -80,6 +81,10 @@ function Sidebar({ isOpen }) {
                   <FaBook />
                   Subjects
                 </NavLink>
+ <NavLink to="/settings" className={linkClass}>
+              <FaCog />
+              Settings
+            </NavLink>
               </>
             )}
 
@@ -118,10 +123,7 @@ function Sidebar({ isOpen }) {
               My Profile
             </NavLink>
 
-            <NavLink to="/settings" className={linkClass}>
-              <FaCog />
-              Settings
-            </NavLink>
+           
 
             <button
               onClick={handleLogout}

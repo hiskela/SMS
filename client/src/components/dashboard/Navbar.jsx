@@ -2,10 +2,10 @@ import { FaBell, FaUserCircle } from "react-icons/fa";
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-
+import { useSettings } from "../../context/SettingsContext";
 function Navbar({ isOpen, setIsOpen }) {
   const { user } = useContext(AuthContext);
-
+const {settings}=useSettings();
   return (
     <div className="bg-white shadow h-16 flex justify-between items-center px-4 md:px-6">
       {/* Left Section - Hamburger & Title */}
@@ -17,7 +17,7 @@ function Navbar({ isOpen, setIsOpen }) {
           ☰
         </button>
         <h1 className="text-base md:text-xl lg:text-2xl font-semibold truncate">
-          School Management
+       {settings?.schoolName}
         </h1>
       </div>
 
