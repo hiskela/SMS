@@ -213,7 +213,7 @@ exports.updateMyProfile = async (req, res) => {
   }
 };
 
-const uploadAvatar = async(req,res)=>{
+exports.uploadAvatar = async(req,res)=>{
 
 try{
 
@@ -236,6 +236,3 @@ message:err.message
 
 };
 
-module.exports={
-uploadAvatar
-};
