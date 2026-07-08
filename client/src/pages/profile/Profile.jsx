@@ -76,6 +76,28 @@ function Profile() {
     }
   };
 
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      await api.put("/profile/avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      alert("Avatar updated successfully");
+      loadProfile(); // Reload profile
+    } catch (err) {
+      console.log(err);
+      alert("Failed to update avatar");
+    }
+  };
+
   if (!profile) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -90,8 +112,30 @@ function Profile() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* PROFILE CARD */}
         <div className="bg-white shadow rounded-2xl p-6 text-center">
-          <div className="w-20 h-20 mx-auto bg-blue-600 text-white flex items-center justify-center rounded-full text-3xl font-bold">
-            {profile.firstName?.charAt(0) || profile.username?.charAt(0)}
+          <div className="text-center">
+            <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-gray-300">
+              {profile.avatar ? (
+                <img
+                  src={profile.avatar.startsWith('http') ? profile.avatar : `http://localhost:3000${profile.avatar}`}
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-blue-600 text-white flex items-center justify-center text-3xl font-bold">
+                  {profile.firstName?.charAt(0) || profile.username?.charAt(0)}
+                </div>
+              )}
+            </div>
+
+            <label className="mt-3 inline-block bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700">
+              Change Photo
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
+            </label>
           </div>
 
           <h2 className="mt-4 text-xl font-bold">
@@ -161,7 +205,6 @@ function Profile() {
                 className="w-full border border-gray-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Email"
                 type="email"
-                
               />
 
               <input
