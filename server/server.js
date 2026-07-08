@@ -1,5 +1,6 @@
 const express=require("express")
 const cors=require("cors")
+const path=require("path")
 const app=express();
 const dotenv=require('dotenv')
 dotenv.config();
@@ -25,7 +26,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/classes", classRoutes)
 app.use("/api/subjects", subjectRoutes)
 app.use("/api/assignments", teachingAssignmentRoutes);
-app.use("/uploads",express.static("uploads"));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api/profile", profileRoutes);
 app.use(

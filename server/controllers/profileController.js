@@ -2,7 +2,7 @@ const User = require("../models/User");
 const Teacher = require("../models/Teacher");
 const Student = require("../models/Student");
 const bcrypt=require("bcrypt")
-exports.getMyProfile = async (req, res) => {
+const getMyProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id)
       .populate("teacher")
@@ -12,17 +12,17 @@ exports.getMyProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    let profile = {
-      _id: user._id,
-      username: user.username,
-      role: user.role,
-      email: user.email || "",
-      firstName: "",
-      lastName: "",
-      phone: "",
-      address: "",
-    };
-
+   let profile = {
+  _id: user._id,
+  username: user.username,
+  role: user.role,
+  avatar: user.avatar,
+  email: user.email || "",
+  firstName: "",
+  lastName: "",
+  phone: "",
+  address: "",
+};
     // TEACHER PROFILE
     if (user.role === "teacher" && user.teacher) {
       profile.firstName = user.teacher.firstName;
@@ -53,7 +53,7 @@ exports.getMyProfile = async (req, res) => {
   }
 };
 
-exports.changePassword = async (req, res) => {
+const changePassword = async (req, res) => {
   try {
 
  
@@ -125,7 +125,7 @@ exports.changePassword = async (req, res) => {
 
   }
 };
-exports.updateMyProfile = async (req, res) => {
+const updateMyProfile = async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -213,26 +213,47 @@ exports.updateMyProfile = async (req, res) => {
   }
 };
 
-exports.uploadAvatar = async(req,res)=>{
 
-try{
 
-const user = await User.findById(req.user.id);
+const uploadAvatar = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        message: "Please select an image",
+      });
+    }
 
-user.avatar = `/uploads/avatars/${req.file.filename}`;
+    const user = await User.findById(req.user.id);
 
-await user.save();
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
 
-res.json(user);
+    user.avatar = `/uploads/avatars/${req.file.filename}`;
 
-}
-catch(err){
+    await user.save();
 
-res.status(500).json({
-message:err.message
-});
+    res.json({
+      message: "Avatar updated successfully",
+      avatar: user.avatar,
+    });
 
-}
+  } catch (err) {
+    console.log(err);
 
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+
+module.exports = {
+  getMyProfile,
+  updateMyProfile,
+  changePassword,
+  uploadAvatar
 };
 
