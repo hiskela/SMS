@@ -427,7 +427,6 @@ const moveStudentToClass = async (req, res) => {
     await student.save();
 
 
-console.log("Student user:", student.user);
     // 1. Notify student
     if(student.user){
 
@@ -447,7 +446,6 @@ console.log("Student user:", student.user);
 
 
       });
-console.log("Notification created:");
 
     }
 
