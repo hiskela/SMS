@@ -16,8 +16,7 @@ function MoveStudentModal({
 
   useEffect(() => {
 
-    if (!open) return;
-
+if (!open || !student || !currentClass) return null;
     const fetchClasses = async () => {
 
       try {
@@ -26,7 +25,7 @@ function MoveStudentModal({
 
         // remove current class
         const otherClasses = res.data.filter(
-          (cls) => cls._id !== currentClass._id
+          (cls) => cls._id !== currentClass?._id
         );
 
         setClasses(otherClasses);
@@ -75,7 +74,7 @@ from ${currentClass.name} to ${selectedClass.name}?`
 
 
       await api.put(
-        "/classes/move-student",
+        `/classes/${student.studentId}/move-student`,
         {
           studentId: student._id,
           classId:newClassId
