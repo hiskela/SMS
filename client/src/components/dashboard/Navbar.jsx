@@ -71,6 +71,38 @@ function Navbar({ isOpen, setIsOpen }) {
       alert("Failed to delete notification");
     }
   };
+const openNotification = async (item) => {
+  setSelectedNotification(item);
+
+  if (!item.read) {
+    await api.put(`/notifications/${item._id}/read`);
+
+    setNotifications(prev =>
+      prev.map(notification =>
+        notification._id === item._id
+          ? { ...notification, isRead: true }
+          : notification
+      )
+    );
+  }
+};
+const markAllAsRead = async () => {
+  try {
+    await api.put("/notifications/mark-all-read");
+
+    setNotifications(prev =>
+      prev.map(notification => ({
+        ...notification,
+        isRead: true
+      }))
+    );
+
+  } catch (err) {
+    console.log(err);
+  }
+};
+const unreadCount=notifications.filter(
+notification=>!notification.isRead).length;
   return (
     <div className="bg-white shadow h-16 flex justify-between items-center px-4 md:px-6">
       {/* Left Section - Hamburger & Title */}
@@ -89,37 +121,72 @@ function Navbar({ isOpen, setIsOpen }) {
       {/* Right Section - Notifications & User */}
       <div className="flex items-center gap-3 md:gap-5">
         <div ref={notificationRef} className="relative">
-          <FaBell
-            size={20}
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="cursor-pointer text-gray-600 hover:text-blue-600"
-          />
+          
+<div ref={notificationRef} className="relative cursor-pointer"     onClick={() => setShowNotifications(!showNotifications)}
+>
 
+  <FaBell
+    size={20}
+    className=" text-gray-600 hover:text-blue-600"
+  />
+
+  {unreadCount > 0 && (
+    <span
+      className="
+      absolute
+      -top-2
+      -right-2
+      bg-red-600
+      text-white
+      text-[10px]
+      font-bold
+      rounded-full
+      min-w-5
+      h-5
+      flex
+      items-center
+      justify-center
+      px-1
+      "
+    >
+      {unreadCount}
+    </span>
+  )}
+
+</div>
           {showNotifications && (
-            <div
-              className="
-absolute right-0 mt-3 
-w-80 bg-white shadow-lg 
-rounded-lg border z-50
-"
-            >
-              <h3 className="font-bold p-3 border-b">Notifications</h3>
+            <div className="absolute right-0 mt-3 w-96 p-3 bg-white rounded-xl shadow-xl border z-50">
 
+    <div className="sticky top-0 bg-white border-b p-3 flex justify-between items-center">
+  <h3 className="font-bold">
+    Notifications
+  </h3>
+
+  {notifications.some(n => !n.isRead) && (
+    <button
+      onClick={markAllAsRead}
+      className="text-sm text-blue-600 hover:underline"
+    >
+      Mark all as read
+    </button>
+  )}
+</div>
               {notifications.length === 0 ? (
                 <p className="p-4 text-gray-500">No notifications</p>
               ) : (
-                notifications.map((item) => (
+  <div className="max-h-126 overflow-y-auto">
+
+                {notifications.map((item) => (
                   <div
                     key={item._id}
                     onClick={() => {
                       setSelectedNotification(item);
+openNotification(item)
                       setShowNotifications(false);
                     }}
-                    className="
-p-3 border-b cursor-pointer
-hover:bg-gray-100
-"
-                  >
+                   className={`p-3 border-b  cursor-pointer rounded-2xl hover:bg-gray-100 ${
+    !item.isRead ? "bg-blue-50 border-l-4 border-blue-600" : "border-l-4"
+  }`}            >
                     <p>{item.message}</p>
 
                     <span className="text-xs text-gray-500">
@@ -127,7 +194,11 @@ hover:bg-gray-100
                     </span>
                   </div>
                 ))
-              )}
+}
+                                </div>
+)
+
+}
             </div>
           )}
         </div>

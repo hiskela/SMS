@@ -60,7 +60,6 @@ function MoveStudentModal({
         classId: newClassId
       });
       
-      console.log("Move response:", response.data);
       alert("Student moved successfully");
       await refresh();
       onClose();
