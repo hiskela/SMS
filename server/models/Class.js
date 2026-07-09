@@ -35,7 +35,10 @@ classId: {
       ref: "Teacher",
       default: null,
     },
-
+teacher: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Teacher"
+},
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,

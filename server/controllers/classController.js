@@ -1,6 +1,7 @@
 const Class = require("../models/Class");
 const Student = require("../models/Student");
 const Teacher = require("../models/Teacher");
+const Notification=require("../models/Notification")
 
 const generateClassId = async () => {
   const year = new Date().getFullYear();
@@ -207,7 +208,15 @@ req.params.id,
       });
     }
 
+// Send notification to teacher
 
+await Notification.create({
+  user: teacher.user,
+  title: "New Class Assignment",
+  message: `You have been assigned as homeroom teacher for class ${updated.name}`,
+  type: "teacher_assigned",
+  relatedId: updated._id
+});
     res.json({
       message:"Teacher assigned successfully",
       class:updated
@@ -276,7 +285,35 @@ const assignStudentToClass = async (req, res) => {
     }
 
     await cls.save();
+// Notify homeroom teacher
 
+if (cls.homeroomTeacher) {
+
+  const teacher = await Teacher.findById(
+    cls.homeroomTeacher
+  );
+
+
+  if (teacher && teacher.user) {
+
+    await Notification.create({
+
+      user: teacher.user,
+
+      title: "New Student Assigned",
+
+      message:
+      `Student ${student.firstName} ${student.lastName} has been assigned to your class ${cls.name}`,
+
+      type:"student_assigned",
+
+      relatedId:student._id
+
+    });
+
+  }
+
+}
 
     res.json({
       message:"Student assigned successfully"
@@ -328,76 +365,49 @@ await student.save();
 };
 const moveStudentToClass = async (req, res) => {
   try {
+    const { classId } = req.body;
 
-    const { studentId, classId } = req.body;
+    const student = await Student.findById(req.params.studentId);
+    const oldClass = student.class;
+
+    const newClass = await Class.findById(classId)
+      .populate("teacher");
 
 
-    // Find destination class
-    const newClass = await Class.findById(classId);
+    // Update student class
+    student.class = newClass._id;
+    await student.save();
 
-    if (!newClass) {
-      return res.status(404).json({
-        message: "Destination class not found"
-      });
+
+    // Notify student
+    await Notification.create({
+  user: student.user,
+  title: "Class Changed",
+  message: `You have been moved to ${newClass.name}.`,
+  type: "student_moved"
+});
+
+
+    // Notify new teacher
+    if (newClass.teacher) {
+   await Notification.create({
+  user: teacher.user,
+  title: "New Student Assigned",
+  message: `${student.firstName} ${student.lastName} has been assigned to your class.`,
+  type: "student_assigned"
+});
     }
-
-
-    // Find current class
-    const oldClass = await Class.findOne({
-      students: studentId
-    });
-
-
-    if (!oldClass) {
-      return res.status(404).json({
-        message: "Student is not assigned to any class"
-      });
-    }
-
-
-    // Same class check
-    if(oldClass._id.toString() === classId){
-      return res.status(400).json({
-        message:"Student already belongs to this class"
-      });
-    }
-
-
-    // Remove from old class
-    oldClass.students =
-      oldClass.students.filter(
-        id => id.toString() !== studentId
-      );
-
-
-    await oldClass.save();
-
-
-
-    // Add to new class
-    newClass.students.push(studentId);
-
-
-    await newClass.save();
-
 
 
     res.json({
-      message:"Student moved successfully",
-      from: oldClass.name,
-      to:newClass.name
+      message: "Student moved successfully"
     });
 
 
-
-  } catch(err){
-
-    console.log(err);
-
+  } catch (error) {
     res.status(500).json({
-      message:err.message
+      message: error.message
     });
-
   }
 };
 // CLASS DETAILS

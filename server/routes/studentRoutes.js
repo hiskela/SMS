@@ -11,7 +11,7 @@ getMyProfile,
 } = require("../controllers/studentController");
 
 router.get("/", getStudents);
-
+router.post("/add", createStudent)
 router.get("/:id", getStudentById);
 
 router.put("/:id", updateStudent);

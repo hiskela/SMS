@@ -26,7 +26,7 @@ router.get("/my-students", authMiddleware, getMyStudents);
 
 router.get("/my-classes", authMiddleware, getMyClasses);
 router.put(
-  "/move-student",
+  "/:id/move-student",
   moveStudentToClass
 );
 router.get("/:id/details", getClassWithDetails);

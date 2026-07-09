@@ -15,10 +15,13 @@ const authRoutes=require("./routes/authRoutes")
 const teachingAssignmentRoutes = require("./routes/teachingAssignmentRoutes");
 const profileRoutes=require("./routes/profileRoutes")
 const settingRoutes=require("./routes/settingRoutes")
-connectDB();
+const notificationRoutes=require("./routes/notificationRoutes");connectDB();
 app.use(cors())
 app.use(express.json())
-
+app.use(
+"/api/notifications",
+notificationRoutes
+);
 app.use("/api/dashboard", dashboardRoute)
 app.use("/api/students", studentRoutes)
 app.use("/api/teachers", teacherRoutes)
