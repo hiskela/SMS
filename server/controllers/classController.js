@@ -256,9 +256,9 @@ const assignStudentToClass = async (req, res) => {
 
 
     // remove from old class if already assigned
-    if(student.class){
+    if(student.assignedClass){
 
-      const oldClass = await Class.findById(student.class);
+      const oldClass = await Class.findById(student.assignedClass);
 
       if(oldClass){
 
@@ -276,7 +276,7 @@ const assignStudentToClass = async (req, res) => {
 
     // assign new class
 
-    student.class = cls._id;
+    student.assignedClass = cls._id;
     await student.save();
 
 
@@ -328,86 +328,190 @@ if (cls.homeroomTeacher) {
 
   }
 };
-const removeStudentFromClass = async(req,res)=>{
- try{
+const removeStudentFromClass = async (req, res) => {
+  try {
+    const { classId, studentId } = req.body;
 
-  const {classId, studentId}=req.body;
+    const cls = await Class.findById(classId);
 
+    if (!cls) {
+      return res.status(404).json({
+        message: "Class not found"
+      });
+    }
 
-  const cls = await Class.findById(classId);
+    // Remove student from class
+    cls.students = cls.students.filter(
+      id => id.toString() !== studentId
+    );
 
-cls.students = cls.students.filter(
-  id => id.toString() !== studentId
-);
+    await cls.save();
 
-await cls.save();
+    // Remove class assignment from student
+    const student = await Student.findById(studentId);
 
-const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found"
+      });
+    }
 
-student.class = null;
+    student.assignedClass = null;
 
-await student.save();
+    await student.save();
 
+    res.json({
+      message: "Student removed successfully"
+    });
 
-  res.json({
-    message:"Student removed successfully"
-  });
-
-
- }catch(err){
-
-  res.status(500).json({
-    message:err.message
-  });
-
- }
-
+  } catch (err) {
+    res.status(500).json({
+      message: err.message
+    });
+  }
 };
 const moveStudentToClass = async (req, res) => {
   try {
+    const studentId = req.params.studentId;
     const { classId } = req.body;
 
-    const student = await Student.findById(req.params.studentId);
-    const oldClass = student.class;
+    const student = await Student.findById(studentId);
 
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found"
+      });
+    }
+
+
+    // Get old class before changing
+    const oldClass = await Class.findById(
+      student.assignedClass
+    ).populate("homeroomTeacher");
+
+
+    // Get new class
     const newClass = await Class.findById(classId)
-      .populate("teacher");
+      .populate("homeroomTeacher");
 
 
-    // Update student class
-    student.class = newClass._id;
+    if (!newClass) {
+      return res.status(404).json({
+        message: "New class not found"
+      });
+    }
+
+
+    // Remove from old class
+    if (oldClass) {
+
+      oldClass.students =
+        oldClass.students.filter(
+          id => id.toString() !== studentId
+        );
+
+      await oldClass.save();
+
+    }
+
+
+    // Add to new class
+    if (!newClass.students.includes(student._id)) {
+      newClass.students.push(student._id);
+      await newClass.save();
+    }
+
+
+    // Update student
+    student.assignedClass = newClass._id;
     await student.save();
 
 
-    // Notify student
-    await Notification.create({
-  user: student.user,
-  title: "Class Changed",
-  message: `You have been moved to ${newClass.name}.`,
-  type: "student_moved"
-});
+console.log("Student user:", student.user);
+    // 1. Notify student
+    if(student.user){
+
+      await Notification.create({
+
+        user: student.user,
+
+        title:"Class Changed",
+
+        message:
+        `You have been moved from ${
+          oldClass?.name || "previous class"
+        } to ${newClass.name}.`,
+
+        type:"student_moved",
+    relatedId: newClass._id
 
 
-    // Notify new teacher
-    if (newClass.teacher) {
-   await Notification.create({
-  user: teacher.user,
-  title: "New Student Assigned",
-  message: `${student.firstName} ${student.lastName} has been assigned to your class.`,
-  type: "student_assigned"
-});
+      });
+console.log("Notification created:");
+
+    }
+
+
+
+    // 2. Notify old teacher
+    if(
+      oldClass &&
+      oldClass.homeroomTeacher &&
+      oldClass.homeroomTeacher.user
+    ){
+
+      await Notification.create({
+
+        user: oldClass.homeroomTeacher.user,
+
+        title:"Student Moved",
+
+        message:
+        `${student.firstName} ${student.lastName} has been moved from your class ${oldClass.name}.`,
+
+        type:"student_moved"
+
+      });
+
+    }
+
+
+
+    // 3. Notify new teacher
+    if(
+      newClass.homeroomTeacher &&
+      newClass.homeroomTeacher.user
+    ){
+
+      await Notification.create({
+
+        user:newClass.homeroomTeacher.user,
+
+        title:"New Student Assigned",
+
+        message:
+        `${student.firstName} ${student.lastName} has been assigned to your class ${newClass.name}.`,
+
+        type:"student_assigned"
+
+      });
+
     }
 
 
     res.json({
-      message: "Student moved successfully"
+      message:"Student moved successfully"
     });
 
 
-  } catch (error) {
+  } catch(error){
+
+    console.log(error);
+
     res.status(500).json({
-      message: error.message
+      message:error.message
     });
+
   }
 };
 // CLASS DETAILS

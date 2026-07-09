@@ -66,12 +66,14 @@ user:{
  type:mongoose.Schema.Types.ObjectId,
  ref:"User"
 },
+  class: { type: mongoose.Schema.Types.ObjectId, ref: "Class" },
 
     status: {
       type: String,
       default: "Active",
     },
   },
+{strictPopulate: false},
   { timestamps: true }
 );
 

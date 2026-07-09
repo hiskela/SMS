@@ -15,7 +15,7 @@ const {
   getMyClasses,
   getMyStudents,
   moveStudentToClass,
-removeStudentFromClass
+  removeStudentFromClass
 } = require("../controllers/classController");
 
 router.post("/", createClass);
@@ -23,20 +23,13 @@ router.post("/assign-student", assignStudentToClass);
 router.post("/assign-teacher", assignTeacherToClass);
 router.get("/", getAllClasses);
 router.get("/my-students", authMiddleware, getMyStudents);
-
 router.get("/my-classes", authMiddleware, getMyClasses);
-router.put(
-  "/:id/move-student",
-  moveStudentToClass
-);
+router.put("/:studentId/move-student", moveStudentToClass);
 router.get("/:id/details", getClassWithDetails);
-
 router.get("/:id", getClassById);
 router.put("/:id", updateClass);
 router.put("/:id/assign-teacher", assignTeacherToClass);
 router.delete("/:id", deleteClass);
-router.post(
- "/remove-student",
- removeStudentFromClass
-);
+router.post("/remove-student", removeStudentFromClass);
+
 module.exports = router;

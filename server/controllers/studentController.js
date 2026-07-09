@@ -47,14 +47,15 @@ await sendEmail(
 Your Password: ${plainPassword}
 Student ID: ${studentId}`
 );
-
+const user=
 await User.create({
   username,
   password: hashedPassword,
   role: "student",
   student: student._id,
 });
-    // 5. response
+   student.user = user._id;
+await student.save(); // 5. response
     return res.status(201).json({
       message: "Student registered successfully",
       student,
@@ -80,10 +81,35 @@ exports.getStudents = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+exports.getUnassignedStudents = async (req, res) => {
+  try {
+
+    const students = await Student.find({
+      assignedClass: null
+    });
+
+    res.json(students);
+
+  } catch(err) {
+
+    res.status(500).json({
+      message: err.message
+    });
+
+  }
+};
 // GET ONE STUDENT
 exports.getStudentById = async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id);
+  const student = await Student.findById(req.params.id)
+  .populate({
+    path: "assignedClass",
+    select: "name grade homeroomTeacher",
+    populate: {
+      path: "homeroomTeacher",
+      select: "firstName lastName"
+    }
+  });
 
     if (!student) {
       return res.status(404).json({

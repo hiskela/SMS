@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   createStudent,
   getStudents,
+getUnassignedStudents,
 getStudentById,
 updateStudent,
 getMyProfile,
@@ -12,8 +13,9 @@ getMyProfile,
 
 router.get("/", getStudents);
 router.post("/add", createStudent)
-router.get("/:id", getStudentById);
+router.get("/unassigned", getUnassignedStudents);
 
+router.get("/:id", getStudentById);
 router.put("/:id", updateStudent);
 
 router.delete("/:id", deleteStudent);
