@@ -26,6 +26,8 @@ import EditStudent from "./pages/students/EditStudent";
 import EditTeacher from "./pages/teachers/EditTeacher";
 import TeacherDetails from "./pages/teachers/TeacherDetails";
 import Settings from "./pages/settings/Settings";
+import TeachingAssignmentList from "./pages/TeachingAssignments/TeachingAssignmentList";
+import AddTeachingAssignment from "./pages/TeachingAssignments/AddTeachingAssignment";
 function App() {
   return (
     <Routes>
@@ -71,6 +73,16 @@ function App() {
             path="/classes/:id/assign-teacher"
             element={<AssignTeacher />}
           />
+<Route
+ path="/teaching-assignments"
+ element={<TeachingAssignmentList />}
+/>
+
+
+<Route
+ path="/teaching-assignments/add"
+ element={<AddTeachingAssignment />}
+/>
         <Route path="/settings" element={<Settings />} />
 
           <Route path="/classes/:id" element={<ClassDetails />} />

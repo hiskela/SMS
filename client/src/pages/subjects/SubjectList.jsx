@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
-
 function SubjectList() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const loadSubjects = async () => {
@@ -121,6 +121,7 @@ function SubjectList() {
                         </td>
                         <td className="p-3">
                           <div className="flex flex-wrap gap-2">
+
                             <button
                               onClick={() => navigate(`/subjects/edit/${s._id}`)}
                               className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
@@ -180,6 +181,7 @@ function SubjectList() {
           )}
         </>
       )}
+
     </div>
   );
 }

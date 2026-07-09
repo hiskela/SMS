@@ -120,7 +120,6 @@ notification=>!notification.isRead).length;
 
       {/* Right Section - Notifications & User */}
       <div className="flex items-center gap-3 md:gap-5">
-        <div ref={notificationRef} className="relative">
           
 <div ref={notificationRef} className="relative cursor-pointer"     onClick={() => setShowNotifications(!showNotifications)}
 >
@@ -174,7 +173,7 @@ notification=>!notification.isRead).length;
               {notifications.length === 0 ? (
                 <p className="p-4 text-gray-500">No notifications</p>
               ) : (
-  <div className="max-h-126 overflow-y-auto">
+  <div className="max-h-[400px] overflow-y-auto">
 
                 {notifications.map((item) => (
                   <div
@@ -201,7 +200,7 @@ openNotification(item)
 }
             </div>
           )}
-        </div>
+    
         {selectedNotification && (
           <div
             className="

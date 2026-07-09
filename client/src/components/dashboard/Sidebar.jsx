@@ -76,7 +76,10 @@ const {settings}=useSettings();
                   <FaSchool />
                   Classes
                 </NavLink>
-
+ <NavLink to="/teaching-assignments" className={linkClass}>
+                  <FaSchool />
+                  Teaching Assignments
+                </NavLink>
                 <NavLink to="/subjects" className={linkClass}>
                   <FaBook />
                   Subjects
