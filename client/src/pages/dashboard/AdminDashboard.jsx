@@ -4,11 +4,30 @@ import axios from "axios";
 function AdminDashboard() {
 const {settings}=useSettings();
 const [stats, setStats]=useState({})
+const [students, setStudents]=useState([]);
 useEffect(()=>{
 axios.get("http://localhost:3000/api/dashboard/stats")
 .then((res)=>setStats(res.data))
 .catch((err)=>console.log(err))
 }, [])
+
+useEffect(() => {
+  const fetchUnassignedStudents = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:3000/api/students/unassigned"
+      );
+
+      setStudents(res.data);
+
+    } catch (err) {
+      console.log("Error:", err);
+    }
+  };
+
+  fetchUnassignedStudents();
+
+}, []);
   return (
     <div>
 <div className="flex justify-between">
@@ -45,7 +64,10 @@ axios.get("http://localhost:3000/api/dashboard/stats")
           <h2 className="text-gray-500">Subjects</h2>
           <p className="text-4xl font-bold mt-2">{stats.subjects}</p>
         </div>
-
+<div className="bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-gray-500">Students with no class</h2>
+          <p className="text-4xl font-bold mt-2">{students.length}</p>
+        </div>
       </div>
 
     </div>

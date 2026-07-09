@@ -11,21 +11,21 @@ function AddStudentModal({
   const [studentId, setStudentId] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!open) return;
-
-    fetchStudents();
-  }, [open]);
+ useEffect(() => {
+  if (!open) return;
 
   const fetchStudents = async () => {
     try {
-      const res = await api.get("/students");
-
+      const res = await api.get("/students/unassigned");
       setStudents(res.data);
     } catch (err) {
       console.log(err);
     }
   };
+
+  fetchStudents();
+
+}, [open]);
 
   const handleAssign = async (e) => {
     e.preventDefault();
@@ -119,7 +119,7 @@ function AddStudentModal({
               >
                 {student.firstName} {student.lastName}
                 {" - "}
-                {student.admissionNumber}
+                {student.grade}
               </option>
 
             ))}

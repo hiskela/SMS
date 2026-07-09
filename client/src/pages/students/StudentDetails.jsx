@@ -111,7 +111,7 @@ function StudentDetails() {
 
           <div>
             <p className="text-gray-500 text-sm">
-            Created At
+           Registered
             </p>
 
           <p className="font-semibold">
@@ -144,7 +144,27 @@ function StudentDetails() {
               {student.phone}
             </p>
           </div>
+ <div>
+            <p className="text-gray-500 text-sm">
+              Class
+            </p>
 
+            <p className="font-semibold">
+            {student.assignedClass
+  ? `${student.assignedClass.name} `
+  : "Not Assigned"}
+            </p>
+          </div>
+  <div>
+            <p className="text-gray-500 text-sm">
+              Father Teacher
+            </p>
+
+            <p className="font-semibold">
+{student.assignedClass?.homeroomTeacher
+ ? `${student.assignedClass.homeroomTeacher.firstName} ${student.assignedClass.homeroomTeacher.lastName}`
+ : "No teacher assigned"}            </p>
+          </div>
           <div>
             <p className="text-gray-500 text-sm">
               Address
