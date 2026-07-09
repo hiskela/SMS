@@ -101,7 +101,7 @@ exports.updateSubject = async (req, res) => {
     const subject = await Subject.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { returnDocument: "after" }
     );
 
     if (!subject) {

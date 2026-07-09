@@ -15,7 +15,8 @@ const authRoutes=require("./routes/authRoutes")
 const teachingAssignmentRoutes = require("./routes/teachingAssignmentRoutes");
 const profileRoutes=require("./routes/profileRoutes")
 const settingRoutes=require("./routes/settingRoutes")
-const notificationRoutes=require("./routes/notificationRoutes");connectDB();
+const notificationRoutes=require("./routes/notificationRoutes");
+connectDB();
 app.use(cors())
 app.use(express.json())
 app.use(
@@ -28,10 +29,13 @@ app.use("/api/teachers", teacherRoutes)
 app.use("/api/auth", authRoutes);
 app.use("/api/classes", classRoutes)
 app.use("/api/subjects", subjectRoutes)
-app.use("/api/assignments", teachingAssignmentRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api/profile", profileRoutes);
+app.use(
+"/api/teaching-assignments",
+teachingAssignmentRoutes
+);
 app.use(
  "/api/settings",
  settingRoutes

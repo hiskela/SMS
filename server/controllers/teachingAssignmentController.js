@@ -1,48 +1,114 @@
 const TeachingAssignment = require("../models/TeachingAssignment");
-
-exports.createAssignment = async (req, res) => {
+const Teacher=require("../models/Teacher")
+const createAssignment = async (req, res) => {
   try {
-    const { teacher, subject, class: classId, academicYear, semester } = req.body;
+
+    const {
+      teacher,
+      subject,
+      class: classId,
+      academicYear,
+      semester
+    } = req.body;
+
 
     if (!teacher || !subject || !classId) {
       return res.status(400).json({
-        message: "teacher, subject and class are required",
+        message:
+        "Teacher, subject and class are required"
       });
     }
 
-    const existing = await TeachingAssignment.findOne({
+
+    // prevent duplicate assignment
+    const existing =
+    await TeachingAssignment.findOne({
       teacher,
       subject,
       class: classId,
       academicYear,
-      semester,
+      semester
     });
 
-    if (existing) {
+
+    if(existing){
+
       return res.status(400).json({
-        message: "Assignment already exists",
+        message:
+        "This assignment already exists"
       });
+
     }
 
-    const assignment = await TeachingAssignment.create({
-      teacher,
+
+
+    // prevent two teachers teaching same subject in same class
+
+    const subjectAlreadyAssigned =
+    await TeachingAssignment.findOne({
+
       subject,
+
       class: classId,
+
       academicYear,
-      semester,
+
+      semester
+
     });
+
+
+    if(subjectAlreadyAssigned){
+
+      return res.status(400).json({
+
+        message:
+        "This subject is already assigned to this class"
+
+      });
+
+    }
+
+
+
+    const assignment =
+    await TeachingAssignment.create({
+
+      teacher,
+
+      subject,
+
+      class: classId,
+
+      academicYear,
+
+      semester
+
+    });
+
+
 
     res.status(201).json({
-      message: "Teaching assignment created",
-      assignment,
+
+      message:
+      "Teaching assignment created successfully",
+
+      assignment
+
     });
-  } catch (err) {
+
+
+  } catch(err){
+
     res.status(500).json({
-      message: err.message,
+
+      message:err.message
+
     });
+
   }
 };
-exports.getAssignments = async (req, res) => {
+const getAssignments = async (req, res) => {
   try {
     const assignments = await TeachingAssignment.find()
       .populate("teacher")
@@ -56,7 +122,7 @@ exports.getAssignments = async (req, res) => {
     });
   }
 };
-exports.getAssignmentById = async (req, res) => {
+const getAssignmentById = async (req, res) => {
   try {
     const assignment = await TeachingAssignment.findById(req.params.id)
       .populate("teacher")
@@ -76,7 +142,86 @@ exports.getAssignmentById = async (req, res) => {
     });
   }
 };
-exports.deleteAssignment = async (req, res) => {
+const getTeacherAssignments = async(req,res)=>{
+
+try{
+
+const assignments =
+await TeachingAssignment.find({
+
+teacher:req.params.teacherId
+
+})
+.populate("subject")
+.populate("class");
+
+
+res.json(assignments);
+
+
+}catch(err){
+
+res.status(500).json({
+
+message:err.message
+
+});
+
+}
+
+};
+
+const updateAssignment = async(req,res)=>{
+
+try{
+
+const updated =
+await TeachingAssignment.findByIdAndUpdate(
+
+req.params.id,
+
+req.body,
+
+{
+ new:true
+}
+
+);
+
+
+if(!updated){
+
+return res.status(404).json({
+
+message:"Assignment not found"
+
+});
+
+}
+
+
+res.json({
+
+message:"Assignment updated",
+
+assignment:updated
+
+});
+
+
+}catch(err){
+
+res.status(500).json({
+
+message:err.message
+
+});
+
+}
+
+};
+
+const deleteAssignment = async (req, res) => {
   try {
     const deleted = await TeachingAssignment.findByIdAndDelete(req.params.id);
 
@@ -95,3 +240,91 @@ exports.deleteAssignment = async (req, res) => {
     });
   }
 };
+const getClassAssignments = async(req,res)=>{
+
+try{
+
+
+const assignments =
+await TeachingAssignment.find({
+
+class:req.params.classId
+
+})
+.populate("teacher")
+.populate("subject");
+
+
+res.json(assignments);
+
+
+}catch(err){
+
+res.status(500).json({
+
+message:err.message
+
+});
+
+}
+
+
+};
+
+const getMyTeachingAssignments = async (req,res)=>{
+  try{
+
+    // Find logged in teacher
+    const teacher = await Teacher.findOne({
+      user:req.user.id
+    });
+
+
+    if(!teacher){
+      return res.status(404).json({
+        message:"Teacher profile not found"
+      });
+    }
+
+
+    const assignments = await TeachingAssignment.find({
+      teacher: teacher._id
+    })
+    .populate(
+      "subject",
+      "name code"
+    )
+    .populate(
+      "class",
+      "name grade"
+    )
+    .populate(
+      "teacher",
+      "firstName lastName"
+    );
+
+
+    res.json(assignments);
+
+
+  }catch(err){
+
+    res.status(500).json({
+      message:err.message
+    });
+
+  }
+};
+module.exports={
+createAssignment,
+getAssignments,
+getAssignmentById,
+deleteAssignment,
+getTeacherAssignments,
+getClassAssignments,
+updateAssignment,
+getMyTeachingAssignments,
+
+
+
+}
