@@ -37,8 +37,7 @@ function AssignHomeroomTeacherModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-console.log("Selected teacher:", teacher);
-console.log("Class:", classId);
+
 if(!teacher){
  alert("Please select a teacher");
  return;
@@ -47,6 +46,11 @@ if(!teacher){
       await api.put(`/classes/${classId}/assign-homeroom`, {
         teacherId: teacher,
       });
+    alert("Homeroom teacher assigned successfully");
+
+    refresh();
+    onClose();
+
     } catch (err) {
       if (err.response?.status === 409) {
         const confirmReplace = window.confirm(
