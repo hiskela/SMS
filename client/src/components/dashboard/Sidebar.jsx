@@ -103,11 +103,11 @@ const {settings}=useSettings();
                   <FaUserGraduate />
                   My Students
                 </NavLink>
-
-                <NavLink to="/my-subjects" className={linkClass}>
+   <NavLink to="/teacher/assignments" className={linkClass}>
                   <FaBook />
                   My Subjects
                 </NavLink>
+               
               </>
             )}
 

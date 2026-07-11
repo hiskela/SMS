@@ -28,6 +28,10 @@ import TeacherDetails from "./pages/teachers/TeacherDetails";
 import Settings from "./pages/settings/Settings";
 import TeachingAssignmentList from "./pages/TeachingAssignments/TeachingAssignmentList";
 import AddTeachingAssignment from "./pages/TeachingAssignments/AddTeachingAssignment";
+import MySubjects from "./pages/TeachingAssignments/MySubjects";
+import TakeAttendance from "./teacher/TakeAttendance";
+import TeacherAssignments from "./teacher/TeacherAssignments";
+import AttendanceHistory from "./teacher/AttendanceHistory";
 function App() {
   return (
     <Routes>
@@ -73,17 +77,16 @@ function App() {
             path="/classes/:id/assign-teacher"
             element={<AssignTeacher />}
           />
-<Route
- path="/teaching-assignments"
- element={<TeachingAssignmentList />}
-/>
+          <Route
+            path="/teaching-assignments"
+            element={<TeachingAssignmentList />}
+          />
 
-
-<Route
- path="/teaching-assignments/add"
- element={<AddTeachingAssignment />}
-/>
-        <Route path="/settings" element={<Settings />} />
+          <Route
+            path="/teaching-assignments/add"
+            element={<AddTeachingAssignment />}
+          />
+          <Route path="/settings" element={<Settings />} />
 
           <Route path="/classes/:id" element={<ClassDetails />} />
 
@@ -95,9 +98,15 @@ function App() {
           <Route path="/students/edit/:id" element={<EditStudent />} />
         </Route>
         <Route element={<ProtectedLayout allowedRoles={["teacher"]} />}>
-
-        <Route path="/my-classes" element={<MyClasses />} />
-        <Route path="/my-students" element={<MyStudents />} />
+          <Route path="/my-subjects" element={<MySubjects />} />
+          <Route path="/my-classes" element={<MyClasses />} />
+          <Route path="/my-students" element={<MyStudents />} />
+          <Route path="/teacher/attendance/:assignmentId" element={<TakeAttendance />} />
+          <Route path="/teacher/assignments" element={<TeacherAssignments />}
+ /><Route
+  path="/teacher/attendance-history/:assignmentId"
+  element={<AttendanceHistory />}
+/>
         </Route>
 
         <Route path="/dashboard" element={<Dashboard />} />

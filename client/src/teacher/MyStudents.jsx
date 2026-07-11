@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import { NavLink } from "react-router-dom";
 function MyStudents() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +30,11 @@ useEffect(() => {
 
   return (
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
+ <NavLink to="/dashboard"
+            className="text-white mb-2 bg-pink-600 p-1 rounded"
+          >
+            ← Back
+          </NavLink>
       <h1 className="text-2xl md:text-3xl font-bold">My Students 👨‍🎓</h1>
       <p className="text-gray-500 mt-2">
         List of students assigned to your classes

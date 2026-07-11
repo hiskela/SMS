@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
-
+import { NavLink } from "react-router-dom";
 function TeacherDashboard() {
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -121,12 +121,12 @@ function TeacherDashboard() {
       <div className="bg-white rounded-xl shadow-md p-6 mt-8">
         <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-3">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+          <NavLink to="/my-students" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200" >
             My Students
-          </button>
-          <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+          </NavLink>
+          <NavLink to="/teacher/assignments" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
             Attendance
-          </button>
+          </NavLink>
           <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
             Grades
           </button>

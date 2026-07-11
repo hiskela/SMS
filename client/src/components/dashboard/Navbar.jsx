@@ -5,13 +5,13 @@ import { AuthContext } from "../../context/AuthContext";
 import { useState, useEffect, useRef } from "react";
 import api from "../../api/axios";
 import { useSettings } from "../../context/SettingsContext";
+
 function Navbar({ isOpen, setIsOpen }) {
   const { user } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const notificationRef = useRef(null);
-
   const { settings } = useSettings();
   const [profile, setProfile] = useState(null);
 
@@ -24,13 +24,12 @@ function Navbar({ isOpen, setIsOpen }) {
         setShowNotifications(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   useEffect(() => {
     const loadNotifications = async () => {
       try {
@@ -58,54 +57,63 @@ function Navbar({ isOpen, setIsOpen }) {
   const deleteNotification = async () => {
     try {
       await api.delete(`/notifications/${selectedNotification._id}`);
-
       setNotifications((prev) =>
         prev.filter((n) => n._id !== selectedNotification._id),
       );
-
       setSelectedNotification(null);
-
       setShowNotifications(false);
     } catch (err) {
       console.log(err);
       alert("Failed to delete notification");
     }
   };
-const openNotification = async (item) => {
-  setSelectedNotification(item);
 
-  if (!item.read) {
-    await api.put(`/notifications/${item._id}/read`);
+  const handleNotificationClick = async (e, item) => {
+    e.stopPropagation();
 
-    setNotifications(prev =>
-      prev.map(notification =>
-        notification._id === item._id
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
-  }
-};
-const markAllAsRead = async () => {
-  try {
-    await api.put("/notifications/mark-all-read");
+    if (!item.isRead) {
+      try {
+        await api.put(`/notifications/${item._id}/read`);
+        setNotifications((prev) =>
+          prev.map((notification) =>
+            notification._id === item._id
+              ? { ...notification, isRead: true }
+              : notification,
+          ),
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setSelectedNotification(item);
+    setShowNotifications(false);
+  };
 
-    setNotifications(prev =>
-      prev.map(notification => ({
-        ...notification,
-        isRead: true
-      }))
-    );
+  const markAllAsRead = async () => {
+    try {
+      await api.put("/notifications/mark-all-read");
+      setNotifications((prev) =>
+        prev.map((notification) => ({
+          ...notification,
+          isRead: true,
+        })),
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  } catch (err) {
-    console.log(err);
-  }
-};
-const unreadCount=notifications.filter(
-notification=>!notification.isRead).length;
+  const toggleNotifications = (e) => {
+    e.stopPropagation();
+    setShowNotifications(!showNotifications);
+  };
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.isRead,
+  ).length;
+
   return (
     <div className="bg-white shadow h-16 flex justify-between items-center px-4 md:px-6">
-      {/* Left Section - Hamburger & Title */}
       <div className="flex items-center gap-2 md:gap-4">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -118,136 +126,92 @@ notification=>!notification.isRead).length;
         </h1>
       </div>
 
-      {/* Right Section - Notifications & User */}
       <div className="flex items-center gap-3 md:gap-5">
-          
-<div ref={notificationRef} className="relative cursor-pointer"     onClick={() => setShowNotifications(!showNotifications)}
+        <div ref={notificationRef} className="relative  cursor-pointer"             onClick={toggleNotifications}
 >
+          <FaBell
+            size={20}
+            className="text-gray-600 hover:text-blue-600 "
+          />
+          {unreadCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full min-w-5 h-5 flex items-center justify-center px-1">
+              {unreadCount}
+            </span>
+          )}
 
-  <FaBell
-    size={20}
-    className=" text-gray-600 hover:text-blue-600"
-  />
-
-  {unreadCount > 0 && (
-    <span
-      className="
-      absolute
-      -top-2
-      -right-2
-      bg-red-600
-      text-white
-      text-[10px]
-      font-bold
-      rounded-full
-      min-w-5
-      h-5
-      flex
-      items-center
-      justify-center
-      px-1
-      "
-    >
-      {unreadCount}
-    </span>
-  )}
-
-</div>
           {showNotifications && (
-            <div className="absolute right-0 mt-3 w-96 p-3 bg-white rounded-xl shadow-xl border z-50">
-
-    <div className="sticky top-0 bg-white border-b p-3 flex justify-between items-center">
-  <h3 className="font-bold">
-    Notifications
-  </h3>
-
-  {notifications.some(n => !n.isRead) && (
-    <button
-      onClick={markAllAsRead}
-      className="text-sm text-blue-600 hover:underline"
-    >
-      Mark all as read
-    </button>
-  )}
-</div>
-              {notifications.length === 0 ? (
-                <p className="p-4 text-gray-500">No notifications</p>
-              ) : (
-  <div className="max-h-[400px] overflow-y-auto">
-
-                {notifications.map((item) => (
-                  <div
-                    key={item._id}
-                    onClick={() => {
-                      setSelectedNotification(item);
-openNotification(item)
-                      setShowNotifications(false);
+            <div className="absolute right-0 mt-3 w-96 bg-white rounded-xl shadow-xl border z-50">
+              <div className="sticky top-0 bg-white border-b p-3 flex justify-between items-center rounded-t-xl">
+                <h3 className="font-bold">Notifications</h3>
+                {notifications.some((n) => !n.isRead) && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markAllAsRead();
                     }}
-                   className={`p-3 border-b  cursor-pointer rounded-2xl hover:bg-gray-100 ${
-    !item.isRead ? "bg-blue-50 border-l-4 border-blue-600" : "border-l-4"
-  }`}            >
-                    <p>{item.message}</p>
-
-                    <span className="text-xs text-gray-500">
-                      {new Date(item.createdAt).toLocaleString()}
-                    </span>
-                  </div>
-                ))
-}
-                                </div>
-)
-
-}
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    Mark all as read
+                  </button>
+                )}
+              </div>
+              {notifications.length === 0 ? (
+                <p className="p-4 text-gray-500 text-center">
+                  No notifications
+                </p>
+              ) : (
+                <div className="max-h-[400px] overflow-y-auto">
+                  {notifications.map((item) => (
+                    <div
+                      key={item._id}
+                      onClick={(e) => handleNotificationClick(e, item)}
+                      className={`p-3 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
+                        !item.isRead
+                          ? "bg-blue-50 border-l-4 border-l-blue-600"
+                          : "border-l-4 border-l-transparent"
+                      }`}
+                    >
+                      <p className="text-sm text-gray-800">{item.message}</p>
+                      <span className="text-xs text-gray-500">
+                        {new Date(item.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
-    
+        </div>
+
         {selectedNotification && (
           <div
-            className="
-fixed inset-0 
-bg-black/40 
-flex items-center justify-center
-z-50
-"
+            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setSelectedNotification(null);
+              }
+            }}
           >
-            <div
-              className="
-bg-white 
-rounded-xl 
-p-6 
-w-96
-"
-            >
-              <h2 className="text-xl font-bold mb-3">Notification Details</h2>
-
-              <p className="mb-4">{selectedNotification.message}</p>
-
+            <div className="bg-white rounded-xl p-6 w-96 shadow-2xl">
+              <h2 className="text-xl font-bold mb-3 text-gray-800">
+                Notification Details
+              </h2>
+              <p className="mb-4 text-gray-700">
+                {selectedNotification.message}
+              </p>
               <p className="text-sm text-gray-500 mb-5">
                 {new Date(selectedNotification.createdAt).toLocaleString()}
               </p>
-
               <div className="flex justify-end gap-3">
                 <button
-                  onClick={() => {
-                    setSelectedNotification(null);
-                  }}
-                  className="
-px-4 py-2 
-bg-gray-300 
-rounded
-"
+                  onClick={() => setSelectedNotification(null)}
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition-colors font-medium"
                 >
                   Cancel
                 </button>
-
                 <button
                   onClick={deleteNotification}
-                  className="
-px-4 py-2 
-bg-red-600 
-text-white 
-rounded
-"
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors font-medium"
                 >
                   Delete
                 </button>
@@ -256,7 +220,6 @@ rounded
           </div>
         )}
 
-        {/* User Profile */}
         <div className="flex items-center gap-2">
           <NavLink to="/profile/me">
             {profile?.avatar ? (
@@ -273,10 +236,8 @@ rounded
               </div>
             )}
           </NavLink>
-
-          {/* User Info - Hidden on very small screens */}
           <div className="hidden sm:block">
-            <p className="font-semibold capitalize text-sm md:text-base">
+            <p className="font-semibold capitalize text-sm md:text-base text-gray-800">
               {user?.fullName || "User"}
             </p>
             <p className="text-xs md:text-sm text-gray-500">

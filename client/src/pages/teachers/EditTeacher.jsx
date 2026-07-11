@@ -87,7 +87,7 @@ function EditTeacher() {
       </button>
 
       <div className="bg-white shadow rounded-lg">
-        <div className="bg-green-600 text-white p-5 rounded-t-lg">
+        <div className="bg-blue-600 text-white p-5 rounded-t-lg">
           <h2 className="text-2xl font-bold">Edit Teacher</h2>
         </div>
 

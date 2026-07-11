@@ -106,7 +106,7 @@ function TeacherDetails() {
           </div>
 
           <div>
-            <p className="text-gray-500 text-sm">Created At</p>
+            <p className="text-gray-500 text-sm">Registered</p>
 
            <p className="font-semibold">
   {teacher.createdAt
