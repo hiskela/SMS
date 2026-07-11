@@ -16,12 +16,13 @@ router.post("/", createAssignment);
 router.get("/", getAssignments);
 router.get("/teacher/:teacherId", getTeacherAssignments);
 router.get("/class/:classId", getClassAssignments);
-router.get("/:id", getAssignmentById);
 router.get(
 "/my-assignments",
 authMiddleware,
 getMyTeachingAssignments
 );
+router.get("/:id", getAssignmentById);
+
 
 router.put("/:id", updateAssignment);
 router.delete("/:id", deleteAssignment);

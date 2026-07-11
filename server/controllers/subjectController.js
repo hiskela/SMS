@@ -1,5 +1,5 @@
 const Subject = require("../models/Subject");
-
+const TeachingAssignment=require("../models/TeachingAssignment")
 // Generate Subject ID like SUB20260001
 const generateSubjectId = async () => {
   const year = new Date().getFullYear();
@@ -54,6 +54,34 @@ if (existing) {
   }
 };
 
+exports.deleteSubject = async (req, res) => {
+  try {
+    const subject = await Subject.findById(req.params.id);
+
+    if (!subject) {
+      return res.status(404).json({
+        message: "Subject not found",
+      });
+    }
+
+    // Delete all teaching assignments using this subject
+    await TeachingAssignment.deleteMany({
+      subject: req.params.id,
+    });
+
+    // Delete the subject
+    await Subject.findByIdAndDelete(req.params.id);
+
+    res.json({
+      message: "Subject and related assignments deleted successfully",
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 // GET ALL SUBJECTS
 exports.getSubjects = async (req, res) => {
   try {
@@ -82,20 +110,7 @@ exports.getSubjectById = async (req, res) => {
     });
   }
 };
-// DELETE SUBJECT
-exports.deleteSubject = async (req, res) => {
-  try {
-   const subject= await Subject.findByIdAndDelete(req.params.id);
-if (!subject) {
-  return res.status(404).json({
-    message: "Subject not found",
-  });
-}
-    res.json({ message: "Subject deleted" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+
 exports.updateSubject = async (req, res) => {
   try {
     const subject = await Subject.findByIdAndUpdate(

@@ -274,7 +274,7 @@ message:err.message
 const getMyTeachingAssignments = async (req,res)=>{
   try{
 
-    // Find logged in teacher
+
     const teacher = await Teacher.findOne({
       user:req.user.id
     });
@@ -294,10 +294,14 @@ const getMyTeachingAssignments = async (req,res)=>{
       "subject",
       "name code"
     )
-    .populate(
-      "class",
-      "name grade"
-    )
+    .populate({
+  path:"class",
+  select:"name grade section students",
+  populate:{
+    path:"students",
+    select:"firstName lastName gender studentId"
+  }
+})
     .populate(
       "teacher",
       "firstName lastName"
