@@ -168,7 +168,6 @@ const assignHomeroomTeacher = async (req,res)=>{
 
 
     const teacher = await Teacher.findById(teacherId);
-
     if(!teacher){
       return res.status(404).json({
         message:"Teacher not found"
