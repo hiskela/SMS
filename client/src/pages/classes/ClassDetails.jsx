@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import AssignTeacherModal from "./components/AddTeacherModal";
 import AddStudentModal from "./components/AddStudentModal";
 import MoveStudentModal from "./components/MoveStudentModal";
-
+import AssignHomeroomTeacherModal from "./components/AssignHomeroomTeacherModal";
 function ClassDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -226,12 +225,7 @@ function ClassDetails() {
       </div>
 
       {/* Modals */}
-      <AssignTeacherModal
-        open={showTeacherModal}
-        onClose={() => setShowTeacherModal(false)}
-        classId={classData._id}
-        refresh={fetchClass}
-      />
+     
 
       <AddStudentModal
         open={showStudentModal}
@@ -247,6 +241,14 @@ function ClassDetails() {
         currentClass={classData}
         refresh={fetchClass}
       />
+<AssignHomeroomTeacherModal
+ open={showTeacherModal}
+ onClose={()=>setShowTeacherModal(false)}
+ classId={classData._id}
+ refresh={fetchClass}
+ hasTeacher={!!classData.homeroomTeacher}
+
+/>
     </div>
   );
 }

@@ -87,11 +87,11 @@ cursor-pointer
               </button>
 <button
   onClick={() =>
-    navigate(`/teacher/attendance-history/${item._id}`)
+    navigate(`/teacher/attendance/history/${item._id}`)
   }
   className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
 >
-  View Attendance
+  View Attendance History
 </button>
             </div>
           ))}

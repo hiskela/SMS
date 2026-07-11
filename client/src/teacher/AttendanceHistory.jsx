@@ -1,195 +1,90 @@
 import { useEffect, useState } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-
+import { NavLink } from "react-router-dom";
 function AttendanceHistory() {
   const { assignmentId } = useParams();
 
-  const [attendance, setAttendance] = useState([]);
+  const navigate = useNavigate();
 
- 
-
-  const loadAttendance = async () => {
-    try {
-      const res = await api.get(`/attendance/history/${assignmentId}`);
-
-      setAttendance(res.data);
-    } catch (err) {import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import api from "../api/axios";
-
-function AttendanceHistory() {
-  const { assignmentId } = useParams();
-
-  const [attendance, setAttendance] = useState([]);
-  const [selectedDate, setSelectedDate] = useState("");
-
-  const loadAttendance = async (date) => {
-    if (!date) return;
-
-    try {
-      const res = await api.get(
-        `/attendance/assignment/${assignmentId}/${date}`
-      );
-
-      setAttendance(res.data);
-    } catch (err) {
-      console.log(err);
-      setAttendance([]);
-    }
-  };
+  const [summary, setSummary] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    setSelectedDate(today);
-    loadAttendance(today);
-  }, []);
+    const loadSummary = async () => {
+      try {
+        const res = await api.get(`/attendance/summary/${assignmentId}`);
+
+        setSummary(res.data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSummary();
+  }, [assignmentId]);
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="p-6 max-w-6xl mx-auto">
+ <NavLink to="/teacher/assignments"
+            className="text-white mb-3 bg-pink-600 p-1 rounded "
+          >
+            ← Back
+          </NavLink>
+      <h1 className="text-3xl font-bold mb-6">Attendance History</h1>
 
-      <div className="flex justify-between items-center mb-6">
+      {loading && <p>Loading attendance...</p>}
 
-        <h1 className="text-3xl font-bold">
-          Attendance History
-        </h1>
-
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={(e) => {
-            setSelectedDate(e.target.value);
-            loadAttendance(e.target.value);
-          }}
-          className="border rounded-lg p-2"
-        />
-
-      </div>
-
-      {attendance.length === 0 ? (
-
-        <div className="bg-white rounded-xl shadow p-6 text-center">
-          No attendance found for this date.
+      {summary.length === 0 && !loading && (
+        <div className="bg-white shadow rounded-xl p-6">
+          <p className="text-gray-500">No attendance records found.</p>
         </div>
-
-      ) : (
-
-        <table className="w-full bg-white shadow rounded-xl overflow-hidden">
-
-          <thead className="bg-blue-600 text-white">
-
-            <tr>
-              <th className="p-3 text-left">Student ID</th>
-              <th className="p-3 text-left">Student Name</th>
-              <th className="p-3 text-left">Gender</th>
-              <th className="p-3 text-left">Status</th>
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {attendance.map((item) => (
-
-              <tr key={item._id} className="border-b">
-
-                <td className="p-3">
-                  {item.student.studentId}
-                </td>
-
-                <td className="p-3">
-                  {item.student.firstName} {item.student.lastName}
-                </td>
-
-                <td className="p-3">
-                  {item.student.gender}
-                </td>
-
-                <td className="p-3">
-
-                  <span
-                    className={`px-3 py-1 rounded-full text-white ${
-                      item.status === "Present"
-                        ? "bg-green-600"
-                        : item.status === "Absent"
-                        ? "bg-red-600"
-                        : "bg-yellow-500"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-
-                </td>
-
-              </tr>
-
-            ))}
-
-          </tbody>
-
-        </table>
-
       )}
 
-    </div>
-  );
-}
+      <div className="grid md:grid-cols-3 gap-6">
+        {summary.map((item) => (
+          <div key={item._id} className="bg-white shadow rounded-xl p-5">
+            <h2 className="text-xl font-bold mb-4">{item._id}</h2>
 
-export default AttendanceHistory;
-      console.log(err);
-    }
-  };
- useEffect(() => {
-    loadAttendance();
-  }, []);
-  return (
-    <div className="p-6">
-      <NavLink
-        to="/teacher/assignments"
-        className="bg-pink-600 text-white px-3 py-1 rounded"
-      >
-        ← Back
-      </NavLink>
+            <div className="space-y-2">
+              <p className="text-green-600 font-semibold">
+                Present:
+                {item.present}
+              </p>
 
-      <h1 className="text-2xl font-bold my-4">Attendance History</h1>
+              <p className="text-red-600 font-semibold">
+                Absent:
+                {item.absent}
+              </p>
 
-      <table className="w-full border">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border p-2">Student</th>
-            <th className="border p-2">Date</th>
-            <th className="border p-2">Status</th>
-          </tr>
-        </thead>
+              <p className="text-yellow-600 font-semibold">
+                Late:
+                {item.late}
+              </p>
+            </div>
 
-        <tbody>
-          {attendance.map((record) => (
-            <tr key={record._id}>
-              <td className="border p-2">
-                {record.student.firstName} {record.student.lastName}
-              </td>
-
-              <td className="border p-2">
-                {new Date(record.date).toLocaleDateString()}
-              </td>
-
-              <td className="border p-2">
-                <span
-                  className={`px-2 py-1 rounded text-white ${
-                    record.status === "Present"
-                      ? "bg-green-600"
-                      : record.status === "Late"
-                        ? "bg-yellow-500"
-                        : "bg-red-600"
-                  }`}
-                >
-                  {record.status}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <button
+              onClick={() =>
+                navigate(
+                  `/teacher/attendance/details/${assignmentId}/${item._id}`,
+                )
+              }
+              className="
+mt-5
+w-full
+bg-blue-600
+text-white
+py-2
+rounded-lg
+"
+            >
+              View Details
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
