@@ -161,75 +161,164 @@ const deleteClass = async (req, res) => {
 };
 
 
-const assignTeacherToClass = async (req,res)=>{
+const assignHomeroomTeacher = async (req,res)=>{
   try{
 
-    const { teacherId } = req.body;
-
-const teacher = await Teacher.findById(teacherId);
-
-if (!teacher) {
-  return res.status(404).json({
-    message: "Teacher not found",
-  });
-}
-    const existingClass = await Class.findOne(
-req.params.id,
-{
-      homeroomTeacher: teacher._id
-    });
+    const { teacherId, confirmReplace } = req.body;
 
 
-    if(
-      existingClass &&
-      existingClass._id.toString() !== req.params.id
-    ){
-      return res.status(400).json({
-        message:"Teacher is already assigned to another class"
+    const teacher = await Teacher.findById(teacherId);
+
+    if(!teacher){
+      return res.status(404).json({
+        message:"Teacher not found"
       });
     }
 
 
-
-    const updated = await Class.findByIdAndUpdate(
-      req.params.id,
-      {
-        homeroomTeacher: teacherId
-      },
-      {
-        returnDocument:"after"
-      }
-    );
+    const currentClass = await Class.findById(req.params.id);
 
 
-    if(!updated){
+    if(!currentClass){
       return res.status(404).json({
         message:"Class not found"
       });
     }
 
-// Send notification to teacher
 
-await Notification.create({
-  user: teacher.user,
-  title: "New Class Assignment",
-  message: `You have been assigned as homeroom teacher for class ${updated.name}`,
-  type: "teacher_assigned",
-  relatedId: updated._id
-});
+
+    const existingClass = await Class.findOne({
+      homeroomTeacher: teacher._id,
+      _id:{
+        $ne:req.params.id
+      }
+    });
+
+
+
+    // Teacher already has another class
+    if(existingClass && !confirmReplace){
+
+      return res.status(409).json({
+
+        message:
+        `Teacher is already assigned to ${existingClass.name}. Do you want to move this teacher?`,
+
+        requireConfirmation:true
+
+      });
+
+    }
+
+
+
+    // Remove teacher from old class
+    if(existingClass && confirmReplace){
+
+      await Class.findByIdAndUpdate(
+        existingClass._id,
+        {
+          $unset:{
+            homeroomTeacher:""
+          }
+        }
+      );
+
+    }
+
+
+
+    // Assign teacher to new class
+
+    currentClass.homeroomTeacher = teacher._id;
+
+    await currentClass.save();
+
+
+
+    await Notification.create({
+
+      user:teacher.user,
+
+      title:"New Class Assignment",
+
+      message:
+      `You have been assigned as homeroom teacher for ${currentClass.name}`,
+
+      type:"teacher_assigned",
+
+      relatedId:currentClass._id
+
+    });
+
+
+
     res.json({
+
       message:"Teacher assigned successfully",
-      class:updated
+
+      class:currentClass
+
     });
 
 
-  }catch(err){
-
-    res.status(500).json({
-      message:err.message
-    });
 
   }
+catch(err){
+
+if(
+err.response?.status === 409 &&
+err.response.data.requireConfirmation
+){
+
+const confirm = window.confirm(
+err.response.data.message
+);
+
+
+if(confirm){
+
+try{
+
+await api.put(`/classes/${classId}/assign-homeroom`,{
+
+teacher,
+
+confirmReplace:true
+
+});
+
+
+alert("Teacher moved successfully");
+
+refresh();
+
+onClose();
+
+
+}catch(error){
+
+alert(
+error.response?.data?.message ||
+"Failed"
+);
+
+}
+
+}
+
+
+}
+else{
+
+alert(
+err.response?.data?.message ||
+"Failed"
+);
+
+}
+
+}
 };
 const assignStudentToClass = async (req, res) => {
   try {
@@ -529,7 +618,56 @@ const getClassWithDetails = async (req, res) => {
   }
 };
 
+const getTeachersForHomeroom = async (req,res)=>{
+  try{
 
+    const { mode } = req.query;
+
+    let teachers;
+
+
+    // When assigning first time
+    if(mode === "available"){
+
+      const classes = await Class.find({
+        homeroomTeacher:{
+          $ne:null
+        }
+      }).select("homeroomTeacher");
+
+
+      const assignedTeacherIds =
+      classes.map(c=>c.homeroomTeacher);
+
+
+      teachers = await Teacher.find({
+        _id:{
+          $nin:assignedTeacherIds
+        }
+      });
+
+    }
+
+
+    // When changing teacher
+    else{
+
+      teachers = await Teacher.find();
+
+    }
+
+
+    res.json(teachers);
+
+
+  }catch(err){
+
+    res.status(500).json({
+      message:err.message
+    });
+
+  }
+};
 // TEACHER CLASSES
 const getTeacherClasses = async (req, res) => {
   try {
@@ -571,10 +709,11 @@ module.exports = {
   getClassById,
   updateClass,
   deleteClass,
-  assignTeacherToClass,
+  assignHomeroomTeacher,
   assignStudentToClass,
   getClassWithDetails,
   getTeacherClasses,
+getTeachersForHomeroom,
 getMyClasses,
 getMyStudents,
 removeStudentFromClass,

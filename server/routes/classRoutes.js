@@ -9,26 +9,33 @@ const {
   updateClass,
   deleteClass,
   assignStudentToClass,
-  assignTeacherToClass,
   getClassWithDetails,
   getTeacherClasses,
   getMyClasses,
+getTeachersForHomeroom,
   getMyStudents,
   moveStudentToClass,
-  removeStudentFromClass
+  removeStudentFromClass,
+assignHomeroomTeacher
 } = require("../controllers/classController");
 
 router.post("/", createClass);
 router.post("/assign-student", assignStudentToClass);
-router.post("/assign-teacher", assignTeacherToClass);
+router.get(
+ "/teachers/homeroom",
+ getTeachersForHomeroom
+);
 router.get("/", getAllClasses);
 router.get("/my-students", authMiddleware, getMyStudents);
 router.get("/my-classes", authMiddleware, getMyClasses);
 router.put("/:studentId/move-student", moveStudentToClass);
 router.get("/:id/details", getClassWithDetails);
+router.put(
+"/:id/assign-homeroom",
+assignHomeroomTeacher
+);
 router.get("/:id", getClassById);
 router.put("/:id", updateClass);
-router.put("/:id/assign-teacher", assignTeacherToClass);
 router.delete("/:id", deleteClass);
 router.post("/remove-student", removeStudentFromClass);
 
