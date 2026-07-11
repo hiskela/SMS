@@ -142,7 +142,7 @@ const getClassById = async (req, res) => {
 const updateClass = async (req, res) => {
   try {
     const data = await Class.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: "after",
     });
     res.json(data);
   } catch (err) {

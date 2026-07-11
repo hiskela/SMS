@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../../../api/axios"
+import {toast} from "react-toastify"
+
 function AssignTeacherModal({ open, onClose, subject }) {
   const [teachers, setTeachers] = useState([]);
   const [classes, setClasses] = useState([]);
-
   const [form, setForm] = useState({
     teacher: "",
     class: "",
@@ -49,12 +50,11 @@ function AssignTeacherModal({ open, onClose, subject }) {
         semester: form.semester,
       });
 
-      alert("Teacher assigned successfully");
+      toast.success("Teacher assigned successfully");
 
       onClose();
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to assign teacher");
-    }
+toast.error("Something went wrong")    }
   };
 
   if (!open) return null;

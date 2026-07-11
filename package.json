@@ -9,6 +9,7 @@
     "dev": "npm run server | npm run client"
   },
   "dependencies": {
-    "concurrently": "^9.2.3"
+    "concurrently": "^9.2.3",
+    "react-toastify": "^11.1.0"
   }
 }

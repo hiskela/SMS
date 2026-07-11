@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../../api/axios";
-
+import {toast} from "react-toastify"
 function AssignTeacherModal({
   open,
   onClose,
@@ -30,7 +30,7 @@ function AssignTeacherModal({
     e.preventDefault();
 
     if (!teacherId) {
-      alert("Please select a teacher.");
+      toast.warning("Please select a teacher.");
       return;
     }
 
@@ -48,8 +48,7 @@ function AssignTeacherModal({
 
       onClose();
     } catch (err) {
-      alert(
-        err.response?.data?.message ||
+      toast.error(
           "Failed to assign teacher."
       );
     } finally {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createClass } from "../../../../server/services/classService"; 
 import ClassForm from "./ClassForm";
-
+import {toast} from "react-toastify"
 function AddClass() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -11,9 +11,10 @@ function AddClass() {
     try {
       setLoading(true);
       await createClass(data);
+toast.success("Class created successfully");
       navigate("/classes");
     } catch (err) {
-      console.error(err);
+toast.error("Error Creating New Class");
 
 
     } finally {

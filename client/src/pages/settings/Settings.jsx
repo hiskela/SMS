@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { ClipLoader } from "react-spinners";
+import {toast} from "react-toastify"
 
 function Settings() {
   const [loading, setLoading] = useState(true);
@@ -51,11 +52,11 @@ function Settings() {
 
       await api.put("/settings", form);
 
-      alert("Settings updated successfully");
+      toast.success("Settings updated successfully");
     } catch (err) {
       console.log(err);
 
-      alert(err.response?.data?.message || "Failed to update settings");
+      toast.error("Failed to update settings");
     } finally {
       setSaving(false);
     }

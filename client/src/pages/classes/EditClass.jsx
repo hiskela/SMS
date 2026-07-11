@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ClassForm from "./ClassForm";
 import api from "../../api/axios";
-
+import {toast} from "react-toastify"
 function EditClass() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -28,10 +28,10 @@ function EditClass() {
   const handleSubmit = async (data) => {
     try {
       await api.put(`/classes/${id}`, data);
+toast.success("Class was edited successfully")
       navigate("/classes");
     } catch (err) {
-      console.log(err);
-    }
+toast.success("Failed to edit class")    }
   };
 
   if (loading) return <h2>Loading...</h2>;

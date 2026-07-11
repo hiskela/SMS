@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
 import {ClipLoader} from "react-spinners"
 function AddTeacher() {
@@ -71,7 +72,7 @@ setSaving(true)
       }
     );
 
-    alert(`Teacher Added Successfully!
+    toast.success(`Teacher Added Successfully!
 
 Username: ${res.data.credentials.username}
 Password: ${res.data.credentials.password}`);
@@ -80,7 +81,7 @@ Password: ${res.data.credentials.password}`);
 
   } catch (err) {
     console.log(err);
-    alert("Error adding teacher");
+    toast.error("Error adding teacher");
   }
 finally{
 setSaving(false)

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
 import { NavLink } from "react-router-dom";
+import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
 function TakeAttendance() {
   const { assignmentId } = useParams();
@@ -73,9 +74,9 @@ const saveAttendance = async (confirmUpdate = false) => {
       confirmUpdate,
     });
 
-    alert("Attendance saved successfully!");
+    toast.success("Attendance saved successfully!");
 
-    navigate(`/teacher/attendance-history/${assignmentId}`);
+    navigate(`/teacher/attendance/history/${assignmentId}`);
 
   } catch (err) {
     console.error(err);
@@ -90,13 +91,14 @@ const saveAttendance = async (confirmUpdate = false) => {
 
       if (answer) {
         saveAttendance(true);
+
       }
 
       return;
     }
 
-    alert(
-      err.response?.data?.message ||
+    toast.error(
+     
       "Failed to save attendance."
     );
   }
@@ -165,8 +167,10 @@ const saveAttendance = async (confirmUpdate = false) => {
 {
 
 students.length!==0?<div className="mt-6 flex justify-end">
-  <button
-  onClick={() => saveAttendance(false)}
+  <button 
+  onClick={() => saveAttendance(false) 
+
+}                
   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded"
 >
   Save Attendance

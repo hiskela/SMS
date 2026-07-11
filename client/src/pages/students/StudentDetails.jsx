@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/axios";
+import {toast} from "react-toastify"
 
 function StudentDetails() {
   const { id } = useParams();
@@ -18,7 +19,7 @@ function StudentDetails() {
       setStudent(res.data);
     } catch (err) {
       console.log(err);
-      alert("Failed to load student");
+      toast.error("Failed to load student");
     } finally {
       setLoading(false);
     }

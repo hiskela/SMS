@@ -22,7 +22,7 @@ exports.getSettings = async (req, res) => {
 exports.updateSettings = async (req, res) => {
   try {
     const setting = await Setting.findOneAndUpdate({}, req.body, {
-      new: true,
+      returnDocument : "after",
       upsert: true,
     });
 

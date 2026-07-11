@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../../api/axios";
-
+import {toast} from "react-toastify"
 function MoveStudentModal({
   open,
   onClose,
@@ -24,8 +24,7 @@ function MoveStudentModal({
         setClasses(otherClasses);
         setNewClassId("");
       } catch (err) {
-        console.log(err);
-      }
+toast.error("Error Fetching classes")      }
     };
 
     fetchClasses();
@@ -35,7 +34,7 @@ function MoveStudentModal({
     e.preventDefault();
 
     if (!newClassId) {
-      return alert("Please select a class");
+      return toast.warning("Please select a class");
     }
 
     const selectedClass = classes.find(
@@ -43,7 +42,7 @@ function MoveStudentModal({
     );
 
     if (!selectedClass) {
-      return alert("Selected class not found");
+      return toast.warning("Selected class not found");
     }
 
     const confirmMove = window.confirm(
@@ -60,12 +59,11 @@ function MoveStudentModal({
         classId: newClassId
       });
       
-      alert("Student moved successfully");
+      toast.success("Student moved successfully");
       await refresh();
       onClose();
     } catch (err) {
-      console.error("Move error:", err);
-      alert(err.response?.data?.message || "Failed to move student");
+      toast.error( "Failed to move student");
     } finally {
       setLoading(false);
     }

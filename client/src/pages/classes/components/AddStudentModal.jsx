@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../../api/axios";
-
+import {toast} from "react-toastify"
 function AddStudentModal({
   open,
   onClose,
@@ -42,7 +42,7 @@ function AddStudentModal({
         studentId,
       });
 
-      alert("Student assigned successfully.");
+      toast.success("Student assigned successfully.");
 
       refresh();
       onClose();
@@ -64,15 +64,14 @@ function AddStudentModal({
           studentId,
         });
 
-        alert("Student moved successfully.");
+        toast.success("Student moved successfully.");
 
         refresh();
         onClose();
 
       } else {
 
-        alert(
-          err.response?.data?.message ||
+        toast.error(
           "Failed to assign student."
         );
 

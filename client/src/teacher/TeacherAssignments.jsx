@@ -16,9 +16,7 @@ function TeacherAssignments() {
 
         setAssignments(res.data);
       } catch (err) {
-        console.log(err);
-
-        setError(err.response?.data?.message || "Failed to load assignments");
+        setError( "Failed to load assignments");
       } finally {
         setLoading(false);
       }

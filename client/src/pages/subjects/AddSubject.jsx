@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SubjectForm from "./SubjectForm";
+import {toast} from "react-toastify"
 import { createSubject } from "../../../../server/services/subjectService";
 function AddSubject() {
   const navigate = useNavigate();
@@ -10,10 +11,11 @@ function AddSubject() {
     try {
       setLoading(true);
       await createSubject(data);
-
+toast.success("Subject created successfully");
       navigate("/subjects");
     } catch (err) {
-alert(err.response.data.message)    } finally {
+toast.error("Error creating subject")    } 
+finally {
       setLoading(false);
     }
   };

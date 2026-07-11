@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/axios";
+import {toast} from "react-toastify"
 
 function TeacherDetails() {
   const { id } = useParams();
@@ -18,7 +19,7 @@ function TeacherDetails() {
       setTeacher(res.data);
     } catch (err) {
       console.log(err);
-      alert("Failed to load teacher");
+      toast.error("Failed to load teacher");
     } finally {
       setLoading(false);
     }

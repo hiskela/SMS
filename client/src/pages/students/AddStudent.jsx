@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-
+import {toast} from "react-toastify"
 function AddStudent() {
   const navigate = useNavigate();
 const [saving, setSaving]=useState(false)
@@ -45,14 +45,14 @@ email:"",
     if (!form.grade) newErrors.grade = "Grade is required";
 
    if (!/^\d{10}$/.test(form.phone))
-  newErrors.phone = "Phone must be in international format (+251... or 09)";
+  newErrors.phone = "Phone must be in example format  ";
 
     if (!form.address.trim()) newErrors.address = "Address is required";
     if (!form.email.trim()) newErrors.email = "Email is required";
 
    
 if (!/^\d{10}$/.test(form.familyPhone))
-  newErrors.familyPhone = "Family phone must be in international format (+251...) or 09)";
+  newErrors.familyPhone = "Family phone must be in example format ";
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
@@ -69,7 +69,7 @@ setSaving(true)
       form
     );
 
-    alert(
+    toast.success(
       `Student Registered Successfully!
 
 Username: ${res.data.credentials.username}
@@ -81,7 +81,7 @@ Temporary Password: ${res.data.credentials.password}`
 
   } catch (err) {
     console.error(err);
-  alert(err.response?.data?.message || "Error adding student");
+  toast.error(err.response?.data?.message || "Error adding student");
   }
 finally{
 setSaving(false)
@@ -180,7 +180,7 @@ setSaving(false)
         <div>
           <input
             name="phone"
-  placeholder="e.g. +251912345678"
+  placeholder="e.g. 0912345678"
             onChange={handleChange}
             className="border p-2 w-full"
           />
@@ -214,7 +214,7 @@ setSaving(false)
         <div>
           <input
             name="familyPhone"
-  placeholder="e.g. +251911223344"
+  placeholder="e.g. 0900000000"
             onChange={handleChange}
             className="border p-2 w-full"
           />

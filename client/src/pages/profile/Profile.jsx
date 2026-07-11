@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
+import {toast} from "react-toastify"
 
 function Profile() {
   const [profile, setProfile] = useState(null);
@@ -25,6 +26,7 @@ function Profile() {
       setPasswordMessage(
         err.response?.data?.message || "Error changing password"
       );
+toast.error("Error changing password")
     }
   };
 

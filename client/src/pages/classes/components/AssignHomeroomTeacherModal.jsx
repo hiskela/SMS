@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../../api/axios";
-
+import {toast} from "react-toastify"
 function AssignHomeroomTeacherModal({
   open,
   onClose,
@@ -39,14 +39,14 @@ function AssignHomeroomTeacherModal({
     e.preventDefault();
 
 if(!teacher){
- alert("Please select a teacher");
+ toast.warning("Please select a teacher");
  return;
 }
     try {
       await api.put(`/classes/${classId}/assign-homeroom`, {
         teacherId: teacher,
       });
-    alert("Homeroom teacher assigned successfully");
+    toast.success("Homeroom teacher assigned successfully");
 
     refresh();
     onClose();
@@ -64,7 +64,7 @@ Do you want to move this teacher here?`,
             confirmReplace: true,
           });
 
-          alert("Teacher assigned successfully");
+          toast.success("Teacher assigned successfully");
 
           refresh();
           onClose();
@@ -73,7 +73,7 @@ Do you want to move this teacher here?`,
         return;
       }
 
-      alert("Failed");
+      toast.error("Failed");
     }
   };
 

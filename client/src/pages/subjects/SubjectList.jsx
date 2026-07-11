@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import {toast} from "react-toastify"
+
 function SubjectList() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +38,7 @@ function SubjectList() {
       await api.delete(`/subjects/${id}`);
       setSubjects(prev => prev.filter(s => s._id !== id));
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete subject");
+      toast.error("Failed to delete subject");
     }
   };
 

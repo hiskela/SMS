@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import {toast} from "react-toastify"
 
 function TeacherList() {
   const [teachers, setTeachers] = useState([]);
@@ -41,7 +42,7 @@ function TeacherList() {
 
       setTeachers((prev) => prev.filter((t) => t._id !== id));
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete teacher");
+      toast.error( "Failed to delete teacher");
     }
   };
 

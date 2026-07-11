@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/axios";
+import {toast} from "react-toastify"
 
 function EditStudent() {
   const { id } = useParams();
@@ -36,7 +37,7 @@ function EditStudent() {
       });
     } catch (err) {
       console.log(err);
-      alert("Failed to load student.");
+      toast.error("Failed to load student.");
     } finally {
       setLoading(false);
     }
@@ -61,14 +62,13 @@ function EditStudent() {
 
       await api.put(`/students/${id}`, form);
 
-      alert("Student updated successfully.");
+      toast.success("Student updated successfully.");
 
       navigate(`/students/${id}`);
     } catch (err) {
       console.log(err);
 
-      alert(
-        err.response?.data?.message ||
+      toast.error(
           "Failed to update student."
       );
     } finally {

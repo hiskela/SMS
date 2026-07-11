@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/axios";
+import {toast} from "react-toastify"
 
 function EditTeacher() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ function EditTeacher() {
       });
     } catch (err) {
       console.log(err);
-      alert("Failed to load teacher.");
+      toast.error("Failed to load teacher.");
     } finally {
       setLoading(false);
     }
@@ -61,13 +62,13 @@ function EditTeacher() {
 
       await api.put(`/teachers/${id}`, formData);
 
-      alert("Teacher updated successfully.");
+      toast.success("Teacher updated successfully.");
 
       navigate(`/teachers/${id}`);
     } catch (err) {
       console.log(err);
 
-      alert(err.response?.data?.message || "Failed to update teacher.");
+      toast.error(err.response?.data?.message || "Failed to update teacher.");
     } finally {
       setSaving(false);
     }

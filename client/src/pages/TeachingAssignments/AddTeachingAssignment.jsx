@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
-
+import {toast} from "react-toastify"
 function AddTeachingAssignment(){
 
 const navigate = useNavigate();
@@ -55,16 +55,15 @@ try{
 
 await api.post("/teaching-assignments",form);
 
-alert("Assignment created");
+toast.success("Assignment created");
 
 navigate("/teaching-assignments");
 
 
 }catch(err){
 
-alert(
-err.response?.data?.message ||
-"Failed"
+toast.error(
+"Failed to create Assignment"
 );
 
 }
