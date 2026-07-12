@@ -34,7 +34,11 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+stream: {
+  type: String,
+  enum: ["Natural", "Social", "General"],
+  default: "General",
+},
     assignedClass: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Class",

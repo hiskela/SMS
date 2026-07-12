@@ -18,12 +18,20 @@ const studentId = `STU-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 const existingStudent = await Student.findOne({
   firstName: req.body.firstName.trim(),
   lastName: req.body.lastName.trim(),
-  email: req.body.email.trim().toLowerCase(),
 });
 
 if (existingStudent) {
   return res.status(400).json({
-    message: "A student with the same first name, last name, and email already exists.",
+    message: "A student with the same first name, last name already exists.",
+  });
+}
+const existingEmail = await Student.findOne({
+  email: req.body.email.trim().toLowerCase(),
+});
+
+if (existingEmail) {
+  return res.status(400).json({
+    message: "Email is already registered.",
   });
 }
     // 3. create student
@@ -83,6 +91,24 @@ exports.getStudents = async (req, res) => {
   }
 };
 
+exports.getUnassignedStudents = async (req, res) => {
+  try {
+    const students = await Student.find({
+      $or: [
+        { assignedClass: null },
+        { assignedClass: { $exists: false } }
+      ]
+    });
+
+    res.json(students);
+
+  } catch (err) {
+    res.status(500).json({
+      message: err.message
+    });
+  }
+};
+
 // GET ONE STUDENT
 exports.getStudentById = async (req, res) => {
   try {
@@ -128,15 +154,18 @@ exports.getMySubjects = async (req, res) => {
       student.grade.replace("Grade ", "")
     );
 
-    const stream =
-      grade >= 11
-        ? student.stream
-        : "General";
+    let query = {
+      grade
+    };
 
-    const gradeSubjects = await GradeSubject.findOne({
-      grade,
-      stream,
-    }).populate("subjects");
+     if (grade >= 11) {
+      query.stream = student.stream;
+    } else {
+      query.stream = "General";
+    }
+
+    const gradeSubjects = await GradeSubject.findOne(query)
+.populate("subjects");
 
     if (!gradeSubjects) {
       return res.json([]);

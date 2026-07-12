@@ -8,7 +8,8 @@ getStudentById,
 updateStudent,
 getMyProfile,
   deleteStudent,
-getMySubjects
+getMySubjects,
+getUnassignedStudents
 } = require("../controllers/studentController");
 
 router.get("/", getStudents);
@@ -18,6 +19,7 @@ router.get(
   auth,
   getMySubjects
 );
+router.get("/unassigned", getUnassignedStudents);
 router.get("/:id", getStudentById);
 router.put("/:id", updateStudent);
 

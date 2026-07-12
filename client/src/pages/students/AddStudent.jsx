@@ -13,6 +13,7 @@ const [saving, setSaving]=useState(false)
     age: "",
     gender: "",
     grade: "",
+stream: "",
     phone: "",
 email:"",
     address: "",
@@ -21,14 +22,32 @@ email:"",
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    // clear error when user types
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: "" });
-    }
+  const updatedForm = {
+    ...form,
+    [name]: value,
   };
+
+  // Clear stream for Grade 9 and Grade 10
+  if (
+    name === "grade" &&
+    value !== "Grade 11" &&
+    value !== "Grade 12"
+  ) {
+    updatedForm.stream = "";
+  }
+
+  setForm(updatedForm);
+
+  if (errors[name]) {
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+  }
+};
 
   // ✅ VALIDATION (your original logic improved slightly)
   const validate = () => {
@@ -43,7 +62,12 @@ email:"",
     if (!form.gender) newErrors.gender = "Gender is required";
 
     if (!form.grade) newErrors.grade = "Grade is required";
-
+if (
+  (form.grade === "Grade 11" || form.grade === "Grade 12") &&
+  !form.stream
+) {
+  newErrors.stream = "Stream is required";
+}
    if (!/^\d{10}$/.test(form.phone))
   newErrors.phone = "Phone must be in example format  ";
 
@@ -63,10 +87,19 @@ const handleSubmit = async (e) => {
   if (!validate()) return;
 
   try {
+const studentData = {
+  ...form,
+  stream:
+    form.grade === "Grade 11" || form.grade === "Grade 12"
+      ? form.stream
+      : null,
+};
+
+
 setSaving(true)
     const res = await axios.post(
       "http://localhost:3000/api/students/add",
-      form
+      studentData
     );
 
     toast.success(
@@ -80,9 +113,15 @@ Temporary Password: ${res.data.credentials.password}`
     navigate("/students");
 
   } catch (err) {
-    console.error(err);
-  toast.error(err.response?.data?.message || "Error adding student");
+  const message = err.response?.data?.message;
+
+  if (message === "A student with the same first name, last name, and email already exists.") {
+    toast.error("A student with these details is already registered.");
+  } else {
+    toast.error("Unable to register the student. Please try again.");
   }
+
+}
 finally{
 setSaving(false)
 }
@@ -176,6 +215,29 @@ setSaving(false)
             <p className="text-red-500 text-sm">{errors.grade}</p>
           )}
         </div>
+<div>
+{(form.grade === "Grade 11" ||
+  form.grade === "Grade 12") && (
+
+<select
+  name="stream"
+  value={form.stream}
+  onChange={handleChange}
+  className="border p-2 w-full"
+>
+  <option value="">Select Stream</option>
+  <option value="Natural">Natural</option>
+  <option value="Social">Social</option>
+</select>
+
+)}
+ {errors.stream && (
+  <p className="text-red-500 text-sm">
+    {errors.stream}
+  </p>
+)}
+</div>
+
 
         <div>
           <input
