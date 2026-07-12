@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const classSchema = new mongoose.Schema(
   {
-classId: {
-  type: String,
-  unique: true,
-},
+    classId: {
+      type: String,
+      unique: true,
+    },
     name: {
       type: String,
       required: true,
@@ -24,7 +24,17 @@ classId: {
       trim: true,
     },
 
-
+    stream: {
+      type: String,
+      enum: ["Natural", "Social", "General"],
+      default: "General",
+    },
+subjects:[
+ {
+  type:mongoose.Schema.Types.ObjectId,
+  ref:"Subject"
+ }
+],
     academicYear: {
       type: String,
       default: "2026",
@@ -35,18 +45,19 @@ classId: {
       ref: "Teacher",
       default: null,
     },
-teacher: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Teacher"
-},
+    teacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Teacher",
+    },
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Student",
       },
     ],
+
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Class", classSchema);

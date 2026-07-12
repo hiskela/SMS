@@ -16,7 +16,7 @@ import { AuthContext } from "../../context/AuthContext";
 function Sidebar({ isOpen }) {
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
-const {settings}=useSettings();
+  const { settings } = useSettings();
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -24,9 +24,7 @@ const {settings}=useSettings();
 
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-3 py-2 rounded-lg transition ${
-      isActive
-        ? "bg-blue-700 text-white"
-        : "hover:bg-blue-800 text-gray-100"
+      isActive ? "bg-blue-700 text-white" : "hover:bg-blue-800 text-gray-100"
     }`;
 
   return (
@@ -40,12 +38,10 @@ const {settings}=useSettings();
           {/* Logo */}
           <div className="border-b border-blue-700 pb-4 mb-6">
             <h1 className="text-2xl font-bold">
-             {settings?.schoolName||"School Name"}
+              {settings?.schoolName || "School Name"}
             </h1>
 
-            <p className="text-sm text-blue-200 mt-2">
-              {user?.username}
-            </p>
+            <p className="text-sm text-blue-200 mt-2">{user?.username}</p>
 
             <span className="inline-block mt-1 text-xs bg-blue-700 px-2 py-1 rounded-full capitalize">
               {user?.role}
@@ -53,7 +49,6 @@ const {settings}=useSettings();
           </div>
 
           <nav className="flex flex-col gap-2">
-
             <NavLink to="/dashboard" className={linkClass}>
               <FaHome />
               Dashboard
@@ -76,7 +71,7 @@ const {settings}=useSettings();
                   <FaSchool />
                   Classes
                 </NavLink>
- <NavLink to="/teaching-assignments" className={linkClass}>
+                <NavLink to="/teaching-assignments" className={linkClass}>
                   <FaSchool />
                   Teaching Assignments
                 </NavLink>
@@ -84,10 +79,14 @@ const {settings}=useSettings();
                   <FaBook />
                   Subjects
                 </NavLink>
- <NavLink to="/settings" className={linkClass}>
-              <FaCog />
-              Settings
-            </NavLink>
+                <NavLink to="/grade-subjects/assign" className={linkClass}>
+                  <FaBook />
+                  Assign Subjects
+                </NavLink>
+                <NavLink to="/settings" className={linkClass}>
+                  <FaCog />
+                  Settings
+                </NavLink>
               </>
             )}
 
@@ -103,11 +102,10 @@ const {settings}=useSettings();
                   <FaUserGraduate />
                   My Students
                 </NavLink>
-   <NavLink to="/teacher/assignments" className={linkClass}>
+                <NavLink to="/teacher/assignments" className={linkClass}>
                   <FaBook />
                   My Subjects
                 </NavLink>
-               
               </>
             )}
 
@@ -126,8 +124,6 @@ const {settings}=useSettings();
               My Profile
             </NavLink>
 
-           
-
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 mt-8 px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
@@ -135,7 +131,6 @@ const {settings}=useSettings();
               <FaSignOutAlt />
               Logout
             </button>
-
           </nav>
         </>
       )}

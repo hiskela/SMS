@@ -76,7 +76,7 @@ toast.error("Something went wrong")    }
           >
             <option value="">Select Teacher</option>
 
-            {teachers.map((t) => (
+            { teachers.length===0?<option>No Teacher without class</option>: teachers.map((t) => (
               <option key={t._id} value={t._id}>
                 {t.firstName} {t.lastName}
               </option>

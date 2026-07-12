@@ -109,8 +109,8 @@ const res=await api.get(`/classes/${classId}/available-students`);
             <option value="">
               Select Student
             </option>
-
-            {students.map((student) => (
+{students.length===0? <option value="" disabled >No students registered to this Grade</option> :
+            students.map((student) => (
 
               <option
                 key={student._id}

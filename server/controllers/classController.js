@@ -2,6 +2,7 @@ const Class = require("../models/Class");
 const Student = require("../models/Student");
 const Teacher = require("../models/Teacher");
 const Notification=require("../models/Notification")
+const GradeSubject = require("../models/GradeSubject");
 
 const generateClassId = async () => {
   const year = new Date().getFullYear();
@@ -19,17 +20,69 @@ const generateClassId = async () => {
   return `CLS${year}${String(number).padStart(4, "0")}`;
 };
 // CREATE
+
 const createClass = async (req, res) => {
   try {
-const classId = await generateClassId();
 
-const newClass = await Class.create({
-  ...req.body,
-  classId,
-});  
-  res.status(201).json(newClass);
+    const classId = await generateClassId();
+
+    const {
+      grade,
+      section,
+      stream
+    } = req.body;
+
+
+    let className;
+
+
+    if(Number(grade) >= 11 && stream !== "General"){
+
+      className =
+      `Grade ${grade} ${stream} ${section}`;
+
+    }
+    else{
+
+      className =
+      `Grade ${grade} ${section}`;
+
+    }
+
+
+    // Find subjects assigned for this grade and stream
+    const gradeSubjects = await GradeSubject.findOne({
+      grade: Number(grade),
+      stream: stream || "General"
+    });
+
+
+    const newClass = await Class.create({
+
+      ...req.body,
+
+      name: className,
+
+      classId,
+
+      subjects: gradeSubjects
+      ? gradeSubjects.subjects
+      : []
+
+    });
+
+
+    res.status(201).json(newClass);
+
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+
+    console.log(err);
+
+    res.status(500).json({
+      message: err.message
+    });
+
   }
 };
 
@@ -719,11 +772,51 @@ const getAvailableStudents = async (req, res) => {
     });
 
     res.json(students);
+
   } catch (err) {
     res.status(500).json({
       message: err.message,
     });
   }
+};
+
+
+const getClassSubjects = async(req,res)=>{
+try{
+
+const cls = await Class.findById(req.params.id);
+
+
+if(!cls){
+return res.status(404).json({
+message:"Class not found"
+});
+}
+
+
+const data = await GradeSubject.findOne({
+grade: cls.grade,
+stream: cls.stream
+})
+.populate("subjects");
+
+
+if(!data){
+return res.json([]);
+}
+
+
+res.json(data.subjects);
+
+
+}catch(err){
+
+res.status(500).json({
+message:err.message
+});
+
+}
+
 };
 // IMPORTANT EXPORT (ONLY ONCE)
 module.exports = {
@@ -741,5 +834,6 @@ getTeachersForHomeroom,
 getMyClasses,
 getMyStudents,
 removeStudentFromClass,
-moveStudentToClass
+moveStudentToClass,
+getClassSubjects,
 };

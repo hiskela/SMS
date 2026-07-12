@@ -33,6 +33,7 @@ import TakeAttendance from "./teacher/TakeAttendance";
 import TeacherAssignments from "./teacher/TeacherAssignments";
 import AttendanceHistory from "./teacher/AttendanceHistory";
 import AttendanceDetails from "./teacher/AttendanceDetails";
+import AssignGradeSubjects from "./pages/classes/components/AssignGradeSubjects";
 function App() {
   return (
     <Routes>
@@ -79,6 +80,10 @@ function App() {
             element={<AssignTeacher />}
           />
           <Route
+            path="/grade-subjects/assign"
+            element={<AssignGradeSubjects />}
+          />
+          <Route
             path="/teaching-assignments"
             element={<TeachingAssignmentList />}
           />
@@ -102,19 +107,20 @@ function App() {
           <Route path="/my-subjects" element={<MySubjects />} />
           <Route path="/my-classes" element={<MyClasses />} />
           <Route path="/my-students" element={<MyStudents />} />
-          <Route path="/teacher/attendance/:assignmentId" element={<TakeAttendance />} />
-          <Route path="/teacher/assignments" element={<TeacherAssignments />}/>
-<Route 
-  path="/teacher/attendance/history/:assignmentId" 
-  element={<AttendanceHistory />} 
-/>
+          <Route
+            path="/teacher/attendance/:assignmentId"
+            element={<TakeAttendance />}
+          />
+          <Route path="/teacher/assignments" element={<TeacherAssignments />} />
+          <Route
+            path="/teacher/attendance/history/:assignmentId"
+            element={<AttendanceHistory />}
+          />
 
-<Route 
-  path="/teacher/attendance/details/:assignmentId/:date" 
-  element={<AttendanceDetails />} 
-
- />
-
+          <Route
+            path="/teacher/attendance/details/:assignmentId/:date"
+            element={<AttendanceDetails />}
+          />
         </Route>
 
         <Route path="/dashboard" element={<Dashboard />} />

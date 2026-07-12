@@ -92,7 +92,7 @@ Do you want to move this teacher here?`,
           >
             <option value="">Select Teacher</option>
 
-            {teachers.map((t) => (
+            {teachers.length===0? <option value="" disabled>No  Teacher exist without class</option>: teachers.map((t) => (
               <option key={t._id} value={t._id}>
                 {t.firstName} {t.lastName}
               </option>

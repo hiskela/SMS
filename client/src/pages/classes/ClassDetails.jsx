@@ -14,6 +14,19 @@ function ClassDetails() {
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+const [subjects,setSubjects]=useState([]);
+
+const fetchSubjects=async()=>{
+
+const res=await api.get(
+ `/classes/${id}/subjects`
+);
+
+setSubjects(res.data);
+
+};
+
+
 
   const fetchClass = async () => {
     try {
@@ -27,9 +40,12 @@ function ClassDetails() {
     }
   };
 
-  useEffect(() => {
-    fetchClass();
-  }, [id]);
+  useEffect(()=>{
+
+fetchClass();
+fetchSubjects();
+
+},[id]);
 
   const removeStudent = async (studentId) => {
     const confirm = window.confirm("Remove this student from the class?");
@@ -116,7 +132,42 @@ function ClassDetails() {
           </button>
         </div>
       </div>
+<div className="bg-white shadow rounded-lg p-4 mb-6">
 
+<h2 className="text-xl font-semibold mb-3">
+Subjects
+</h2>
+
+
+{
+subjects.length===0 ?
+
+<p className="text-gray-500">
+No subjects assigned
+</p>
+
+:
+
+<div className="flex flex-wrap gap-2">
+
+{
+subjects.map(subject=>(
+
+<span
+key={subject._id}
+className="bg-blue-100 px-3 py-1 rounded"
+>
+{subject.name}
+</span>
+
+))
+}
+
+</div>
+
+}
+
+</div>
       {/* Students Section */}
       <div className="bg-white shadow rounded-lg p-4 md:p-5">
         <h2 className="text-lg md:text-xl font-semibold mb-4">
