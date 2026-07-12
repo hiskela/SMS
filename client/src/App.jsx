@@ -34,6 +34,7 @@ import TeacherAssignments from "./teacher/TeacherAssignments";
 import AttendanceHistory from "./teacher/AttendanceHistory";
 import AttendanceDetails from "./teacher/AttendanceDetails";
 import AssignGradeSubjects from "./pages/classes/components/AssignGradeSubjects";
+import MySubjectsForStudent from "./student/MySubjects"
 function App() {
   return (
     <Routes>
@@ -121,6 +122,10 @@ function App() {
             path="/teacher/attendance/details/:assignmentId/:date"
             element={<AttendanceDetails />}
           />
+        </Route>
+        <Route element={<ProtectedLayout allowedRoles={["student"]} />}>
+
+<Route path="/student/subjects" element={<MySubjectsForStudent />} />
         </Route>
 
         <Route path="/dashboard" element={<Dashboard />} />

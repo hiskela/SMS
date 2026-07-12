@@ -112,7 +112,7 @@ function Sidebar({ isOpen }) {
             {/* STUDENT */}
             {user?.role === "student" && (
               <>
-                <NavLink to="/subjects" className={linkClass}>
+                <NavLink to="/student/subjects" className={linkClass}>
                   <FaBook />
                   My Subjects
                 </NavLink>
