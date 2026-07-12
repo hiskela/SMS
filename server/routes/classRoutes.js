@@ -16,7 +16,8 @@ getTeachersForHomeroom,
   getMyStudents,
   moveStudentToClass,
   removeStudentFromClass,
-assignHomeroomTeacher
+assignHomeroomTeacher,
+getAvailableStudents
 } = require("../controllers/classController");
 
 router.post("/", createClass);
@@ -25,6 +26,7 @@ router.get(
  "/teachers/homeroom",
  getTeachersForHomeroom
 );
+
 router.get("/", getAllClasses);
 router.get("/my-students", authMiddleware, getMyStudents);
 router.get("/my-classes", authMiddleware, getMyClasses);
@@ -33,6 +35,10 @@ router.get("/:id/details", getClassWithDetails);
 router.put(
 "/:id/assign-homeroom",
 assignHomeroomTeacher
+);
+router.get(
+  "/:classId/available-students",
+  getAvailableStudents
 );
 router.get("/:id", getClassById);
 router.put("/:id", updateClass);

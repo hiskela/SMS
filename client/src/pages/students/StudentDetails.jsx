@@ -125,7 +125,23 @@ function StudentDetails() {
     : "N/A"}
 </p>
           </div>
+  <div>
+            <p className="text-gray-500 text-sm">
+            Grade
+            </p>
 
+            <p className="font-semibold">
+              {student.grade}
+            </p>
+          </div>
+  <div>
+            <p className="text-gray-500 text-sm">
+Age            </p>
+
+            <p className="font-semibold">
+              {student.age}
+            </p>
+          </div>
           <div>
             <p className="text-gray-500 text-sm">
               Email

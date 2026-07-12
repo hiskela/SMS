@@ -24,6 +24,12 @@ toast.error("Error Creating New Class");
 
   return (
     <div className="p-6">
+ <button
+            onClick={() => navigate(-1)}
+            className="text-white mb-3 bg-pink-600 px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors duration-200 inline-flex items-center gap-2"
+          >
+            ← Back
+          </button>
       <h2 className="text-2xl font-bold mb-4">
         Add Class
       </h2>

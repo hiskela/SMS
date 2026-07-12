@@ -16,8 +16,8 @@ function AddStudentModal({
 
   const fetchStudents = async () => {
     try {
-      const res = await api.get("/students/unassigned");
-      setStudents(res.data);
+const res=await api.get(`/classes/${classId}/available-students`); 
+    setStudents(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -31,7 +31,7 @@ function AddStudentModal({
     e.preventDefault();
 
     if (!studentId) {
-      return alert("Please select a student.");
+      return toast.warning("Please select a student.");
     }
 
     try {

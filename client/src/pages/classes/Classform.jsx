@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 function ClassForm({
   initialData = {},
   onSubmit,
@@ -9,7 +10,7 @@ function ClassForm({
     grade: "",
     section: "",
   });
-
+const naviate=useNavigate();
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
       setForm({
@@ -45,6 +46,7 @@ if(!form.name||!form.grade||!form.section) return;
         value={form.name}
         onChange={handleChange}
         className="w-full border rounded p-2"
+required
       />
 
       <input
@@ -54,6 +56,7 @@ if(!form.name||!form.grade||!form.section) return;
         value={form.grade}
         onChange={handleChange}
         className="w-full border rounded p-2"
+required
       />
 
       <input
@@ -63,6 +66,7 @@ if(!form.name||!form.grade||!form.section) return;
         value={form.section}
         onChange={handleChange}
         className="w-full border rounded p-2"
+required
       />
 
       {/* ✅ Save Button */}

@@ -700,7 +700,31 @@ const getTeacherClasses = async (req, res) => {
 
   }
 };
+const getAvailableStudents = async (req, res) => {
+  try {
+    const cls = await Class.findById(req.params.classId);
 
+    if (!cls) {
+      return res.status(404).json({
+        message: "Class not found",
+      });
+    }
+
+    const students = await Student.find({
+      assignedClass: null,
+      grade: `Grade ${cls.grade}`,
+    }).sort({
+      firstName: 1,
+      lastName: 1,
+    });
+
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 // IMPORTANT EXPORT (ONLY ONCE)
 module.exports = {
   createClass,
@@ -711,6 +735,7 @@ module.exports = {
   assignHomeroomTeacher,
   assignStudentToClass,
   getClassWithDetails,
+getAvailableStudents ,
   getTeacherClasses,
 getTeachersForHomeroom,
 getMyClasses,
