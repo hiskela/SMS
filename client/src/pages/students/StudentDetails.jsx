@@ -61,7 +61,7 @@ function StudentDetails() {
 
       <div className="bg-white rounded-lg shadow">
 
-        <div className="border-b p-5 flex justify-between items-center">
+        <div className="border-b p-5 flex justify-between items-center ">
 
           <h1 className="text-2xl font-bold">
             Student Details
